@@ -111,3 +111,21 @@ scaler = preprocessing.RobustScaler()
 df_label_robust = scaler.fit_transform(df_label)
 df_label_robust = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
 print(df_label_robust.head(10))
+
+# Normalizing the ordinalEncoded dataset using RobustScaler
+scaler = preprocessing.MinMaxScaler()
+df_ordinal_minMax = scaler.fit_transform(df_ordinal)
+df_ordinal_minMax = pd.DataFrame(df_ordinal_minMax, columns=df_ordinal.columns)
+print(df_ordinal_minMax.head(10))
+
+# Normalizing the oneHotEncoded dataset using MinMaxScaler
+scaler = preprocessing.MinMaxScaler()
+df_oneHot_minMax = scaler.fit_transform(df_oneHot)
+df_oneHot_minMax = pd.DataFrame(df_oneHot_minMax, columns=df_oneHot.columns)
+print(df_oneHot_minMax.head(10))
+
+# Normalizing the labelEncoded dataset using MinMaxScaler
+scaler = preprocessing.MinMaxScaler()
+df_label_minMax = scaler.fit_transform(df_label)
+df_label_minMax = pd.DataFrame(df_label_minMax, columns=df_label.columns)
+print(df_label_minMax.head(10))
