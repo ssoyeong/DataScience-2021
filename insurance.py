@@ -74,6 +74,19 @@ labelGen = pd.DataFrame(labelEnc.transform(X))
 print(labelGen.head(10))
 
 
+# Convert 'State' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['State'])
+ordEnc.fit(X)
+ordVeh = pd.DataFrame(ordEnc.transform(X))
+print(ordVeh.head(10))
+# Convert 'State' features to numeric values using onehotEncorder
+onehotEnc.fit(X)
+oneHotVeh = pd.DataFrame(onehotEnc.transform(X).toarray())
+print(oneHotVeh.head(10))
+# Convert 'State' features to numeric values using labelEncoder
+labelEnc.fit(df['State'])
+labelVeh = pd.DataFrame(labelEnc.transform(df['State']))
+print(labelVeh.head(10))
 
 # 모든 categorical features를 encoding한 게 아니라 아직 안돌아갑니당
 # # Normalizing the ordinalEncoded dataset using MaxAbsScaler
