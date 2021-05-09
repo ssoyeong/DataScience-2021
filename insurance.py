@@ -57,6 +57,24 @@ df_label['Marital_Status'] = labelEncoder.transform(df_label['Marital_Status'])
 print(df_label.head(20))
 
 
+# Convert 'Gender' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['Gender'])
+ordEnc.fit(X)
+ordGen  = pd.DataFrame(ordEnc.transform(X))
+print(ordGen.head(10))
+
+# Convert 'Gender' features to numeric values using onehotEncoder
+onehotEnc.fit(X)
+oneHotGen = pd.DataFrame(onehotEnc.transform(X))
+print(oneHotGen.head(10))
+
+# Convert 'Gender' features to numeric values using labelEncoder
+labelEnc.fit(X)
+labelGen = pd.DataFrame(labelEnc.transform(X))
+print(labelGen.head(10))
+
+
+
 # 모든 categorical features를 encoding한 게 아니라 아직 안돌아갑니당
 # # Normalizing the ordinalEncoded dataset using MaxAbsScaler
 # scaler = preprocessing.MaxAbsScaler()
@@ -75,4 +93,3 @@ print(df_label.head(20))
 # df_label_maxAbs = scaler.fit_transform(df_label)
 # df_label_maxAbs = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
 # print(df_label_maxAbs.head(10))
-
