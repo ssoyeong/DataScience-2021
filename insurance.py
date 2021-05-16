@@ -1,6 +1,11 @@
+import warnings
+warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.model_selection import train_test_split
+
 
 pd.set_option('display.max_row', 100)
 pd.set_option('display.max_columns', 100)
@@ -112,7 +117,7 @@ df_label_robust = scaler.fit_transform(df_label)
 df_label_robust = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
 print(df_label_robust.head(10))
 
-# Normalizing the ordinalEncoded dataset using RobustScaler
+# Normalizing the ordinalEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
 df_ordinal_minMax = scaler.fit_transform(df_ordinal)
 df_ordinal_minMax = pd.DataFrame(df_ordinal_minMax, columns=df_ordinal.columns)
@@ -129,3 +134,44 @@ scaler = preprocessing.MinMaxScaler()
 df_label_minMax = scaler.fit_transform(df_label)
 df_label_minMax = pd.DataFrame(df_label_minMax, columns=df_label.columns)
 print(df_label_minMax.head(10))
+
+# Normalizing the ordinalEncoded dataset using StandardScaler
+scaler = preprocessing.StandardScaler()
+df_ordinal_stand = scaler.fit_transform(df_ordinal)
+df_ordinal_stand = pd.DataFrame(df_ordinal_minMax, columns=df_ordinal.columns)
+print(df_ordinal_stand.head(10))
+
+# Normalizing the oneHotEncoded dataset using StandardScaler
+scaler = preprocessing.StandardScaler()
+df_oneHot_stand = scaler.fit_transform(df_oneHot)
+df_oneHot_stand = pd.DataFrame(df_oneHot_minMax, columns=df_oneHot.columns)
+print(df_ordinal_stand.head(10))
+
+# Normalizing the labelEncoded dataset using StandardScaler
+scaler = preprocessing.StandardScaler()
+df_label_stand = scaler.fit_transform(df_label)
+df_label_stand = pd.DataFrame(df_label_minMax, columns=df_label.columns)
+print(df_ordinal_stand.head(10))
+
+
+
+df2 = df_label_stand.copy()
+# Rename 'target' and 'annual_claims' features
+df2.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
+# Drop 'ID' feature
+df2.drop(['ID'], 1, inplace=True)
+
+# Split the dataset
+X = df2.drop(['target'], 1)
+y = df2['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+# Using KNN algorithm
+# Create and train a KNN classifier
+knn = KNeighborsRegressor(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+y_prec = knn.predict(X_test)
+print("\n---------- KNN algorithm ----------")
+print(y_prec[0:100])
+print("Score: %.2f" % knn.score(X_test, y_test))
