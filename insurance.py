@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
-
+from sklearn.ensemble import RandomForestRegressor
 
 pd.set_option('display.max_row', 100)
 pd.set_option('display.max_columns', 100)
@@ -175,3 +175,11 @@ y_prec = knn.predict(X_test)
 print("\n---------- KNN algorithm ----------")
 print(y_prec[0:100])
 print("Score: %.2f" % knn.score(X_test, y_test))
+
+
+random_forest = RandomForestRegressor(max_depth= 4, random_state= 0)
+random_forest.fit(X_train,y_train);
+RF_y_predict = random_forest.predict(X_test);
+print("\n\n--------- Random Forest Algorithm")
+print(RF_y_predict[:50])
+print("Score: %.2f" %random_forest.score(X_test,y_test))
