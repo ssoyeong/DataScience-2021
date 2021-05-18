@@ -329,6 +329,24 @@ plt.pie(family_level,labels=langs,autopct='%1.2f%%')
 plt.title('famliy size levels')
 plt.show()
 
+#EngineHP and crdit history scatter plot divided by Gender
+
+plt.scatter(df_f['EngineHP'], df_f['credit_history'],color='r')
+plt.scatter(df_m['EngineHP'], df_m['credit_history'],color='b')
+plt.xlabel('EngineHP')
+plt.ylabel('Credit history')
+plt.title('Scatter plot divided by Gender')
+plt.show()
+
+#Years_Experience and annual claims scatter plot divided by Gender
+
+plt.scatter(df_f['Years_Experience'], df_f['annual_claims'],color='r')
+plt.scatter(df_m['Years_Experience'], df_m['annual_claims'],color='b')
+plt.xlabel('Years_Experience')
+plt.ylabel('Annual claims ')
+plt.title('Scatter plot divided by Gender')
+plt.show()
+
 
 
 df2 = df_label_stand.copy()
