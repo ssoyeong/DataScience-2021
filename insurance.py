@@ -155,6 +155,139 @@ print(df_label_stand.head(10))
 
 
 
+#bar graph of target
+sns.countplot(df['target'])
+plt.show()
+
+#bar graph of Gender
+sns.countplot(df['Gender'])
+plt.show()
+
+#bar graph of annual_claims
+sns.countplot(df['annual_claims'])
+plt.show()
+
+#bar graph of Marital_Status
+sns.countplot(df['Marital_Status'])
+plt.show()
+
+#bar graph of Vehical_type
+sns.countplot(df['Vehical_type'])
+#plt.show()
+
+
+#bar graph of size_of_family
+sns.countplot(df['size_of_family'])
+#plt.show()
+
+#bar graph of State
+sns.countplot(df['State'])
+plt.show()
+
+#Two variable plots
+df_f = pd.DataFrame(df[df['Gender']=='F'])
+df_m = pd.DataFrame(df[df['Gender']=='M'])
+
+
+#EngineHP histogram by Gender
+plt.hist(df_f['EngineHP'], bins=10)
+plt.title('Female')
+plt.xlabel('EngineHP')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_m['EngineHP'], bins=10)
+plt.title('Male')
+plt.xlabel('EngineHP')
+plt.ylabel('Frequency')
+plt.show()
+
+#credit history histogram by Gender
+plt.hist(df_m['credit_history'], bins=10)
+plt.title('Male')
+plt.xlabel('credit_history')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_f['credit_history'], bins=10)
+plt.title('Female')
+plt.xlabel('credit_history')
+plt.ylabel('Frequency')
+plt.show()
+
+
+#years exprience histogram by Gender
+
+plt.hist(df_f['Years_Experience'], bins=10)
+plt.title('Female')
+plt.xlabel('Years_Experience')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_m['Years_Experience'], bins=10)
+plt.title('Male')
+plt.xlabel('Years_Experience')
+plt.ylabel('Frequency')
+plt.show()
+
+#annual claims histogram by Gender
+
+
+plt.hist(df_m['annual_claims'], bins=10)
+plt.title('Male')
+plt.xlabel('annual_claims')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_f['annual_claims'], bins=10)
+plt.title('Female')
+plt.xlabel('annual_claims')
+plt.ylabel('Frequency')
+plt.show()
+#Miles driven annually histogram by Gender
+
+plt.hist(df_f['Miles_driven_annually'], bins=10)
+plt.title('Female')
+plt.xlabel('Miles_driven_annually')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_m['Miles_driven_annually'], bins=10)
+plt.title('Male')
+plt.xlabel('Miles_driven_annually')
+plt.ylabel('Frequency')
+plt.show()
+
+#Size of family histogram by Gender
+
+plt.hist(df_f['size_of_family'], bins=10)
+plt.title('Female')
+plt.xlabel('size_of_family')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_m['size_of_family'], bins=10)
+plt.title('Male')
+plt.xlabel('size_of_family')
+plt.ylabel('Frequency')
+plt.show()
+
+#State histogram by Gender
+
+plt.hist(df_f['State'], bins=10)
+plt.title('Female')
+plt.xlabel('State')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.hist(df_m['State'], bins=10)
+plt.title('Male')
+plt.xlabel('State')
+plt.ylabel('Frequency')
+plt.show()
+
+
+
 df2 = df_label_stand.copy()
 # Rename 'target' and 'annual_claims' features
 df2.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
