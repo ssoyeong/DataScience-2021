@@ -348,6 +348,26 @@ plt.title('Scatter plot divided by Gender')
 plt.show()
 
 
+#Boxplot of annual claims divided by gender
+sns.boxplot(df['Gender'],df['annual_claims'])
+plt.show()
+
+#Boxplot of EngineHP divided by gender
+sns.boxplot(df['Gender'],df['EngineHP'])
+plt.show()
+
+
+#Boxplot of Years Experience divided by gender
+sns.boxplot(df['Gender'],df['Years_Experience'])
+plt.show()
+
+#Boxplot of size of family divided by gender
+sns.boxplot(df['Gender'],df['size_of_family'])
+plt.show()
+
+
+
+
 
 df2 = df_label_stand.copy()
 # Rename 'target' and 'annual_claims' features
