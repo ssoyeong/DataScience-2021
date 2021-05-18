@@ -287,6 +287,49 @@ plt.ylabel('Frequency')
 plt.show()
 
 
+#Pie chart of vehicle type
+car = pd.DataFrame(df[df['Vehical_type']=='Car'])
+van = pd.DataFrame(df[df['Vehical_type']=='Van'])
+truck = pd.DataFrame(df[df['Vehical_type']=='Truck'])
+utility = pd.DataFrame(df[df['Vehical_type']=='Utility'])
+
+langs = ['Car','Van','Truck','Utility']
+vehicle_level = [len(car), len(van), len(truck),len(utility)]
+plt.pie(vehicle_level,labels=langs,autopct='%1.2f%%')
+plt.show()
+
+#Pie chart of annual_claim
+ann_0 = pd.DataFrame(df[df['annual_claims']==0])
+ann_1 = pd.DataFrame(df[df['annual_claims']==1])
+ann_2 = pd.DataFrame(df[df['annual_claims']==2])
+ann_3 = pd.DataFrame(df[df['annual_claims']==3])
+ann_4 = pd.DataFrame(df[df['annual_claims']==4])
+
+langs = ['0','1','2','3','4']
+claim_level = [len(ann_0), len(ann_1), len(ann_2),len(ann_3),len(ann_4)]
+plt.pie(claim_level,labels=langs,autopct='%1.2f%%')
+plt.title('annual claim levels')
+plt.show()
+
+
+#Pie chart of size of family
+fam1 = pd.DataFrame(df[df['size_of_family']==1])
+fam2 = pd.DataFrame(df[df['size_of_family']==2])
+fam3 = pd.DataFrame(df[df['size_of_family']==3])
+fam4 = pd.DataFrame(df[df['size_of_family']==4])
+fam5 = pd.DataFrame(df[df['size_of_family']==5])
+fam6 = pd.DataFrame(df[df['size_of_family']==6])
+fam7 = pd.DataFrame(df[df['size_of_family']==7])
+fam8 = pd.DataFrame(df[df['size_of_family']==8])
+
+
+langs = ['1','2','3','4','5','6','7','8']
+family_level = [len(fam1), len(fam2), len(fam3),len(fam4),len(fam5),len(fam6),len(fam7),len(fam8)]
+plt.pie(family_level,labels=langs,autopct='%1.2f%%')
+plt.title('famliy size levels')
+plt.show()
+
+
 
 df2 = df_label_stand.copy()
 # Rename 'target' and 'annual_claims' features
