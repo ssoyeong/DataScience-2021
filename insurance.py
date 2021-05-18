@@ -145,13 +145,13 @@ print(df_ordinal_stand.head(10))
 scaler = preprocessing.StandardScaler()
 df_oneHot_stand = scaler.fit_transform(df_oneHot)
 df_oneHot_stand = pd.DataFrame(df_oneHot_stand, columns=df_oneHot.columns)
-print(df_ordinal_stand.head(10))
+print(df_oneHot_stand.head(10))
 
 # Normalizing the labelEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
 df_label_stand = scaler.fit_transform(df_label)
 df_label_stand = pd.DataFrame(df_label_stand, columns=df_label.columns)
-print(df_ordinal_stand.head(10))
+print(df_label_stand.head(10))
 
 
 
