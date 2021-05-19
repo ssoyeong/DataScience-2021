@@ -88,49 +88,6 @@ df_ordinal_maxAbs = scaler.fit_transform(df_ordinal)
 df_ordinal_maxAbs = pd.DataFrame(df_ordinal_maxAbs, columns=df_ordinal.columns)
 print(df_ordinal_maxAbs.head(10))
 
-#show result of MaxAbs scaling EngineHP and credit history
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(EngineHp-credit history)')
-sns.kdeplot(df_ordinal['EngineHP'],ax=ax1)
-sns.kdeplot(df_ordinal['credit_history'],ax=ax1)
-
-ax2.set_title('After_scaling(EngineHp-credit history)')
-sns.kdeplot(df_ordinal_maxAbs['EngineHP'],ax=ax2)
-sns.kdeplot(df_ordinal_maxAbs['credit_history'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Years_Experience and annual_claims
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_ordinal['Years_Experience'],ax=ax1)
-sns.kdeplot(df_ordinal['annual_claims'],ax=ax1)
-
-ax2.set_title('After_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_ordinal_maxAbs['Years_Experience'],ax=ax2)
-sns.kdeplot(df_ordinal_maxAbs['annual_claims'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Gender and Marital Status
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_ordinal['Gender'],ax=ax1)
-sns.kdeplot(df_ordinal['Marital_Status'],ax=ax1)
-
-ax2.set_title('After_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_ordinal_maxAbs['Gender'],ax=ax2)
-sns.kdeplot(df_ordinal_maxAbs['Marital_Status'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling size_of_family and Miles_driven_annually 
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_ordinal['size_of_family'],ax=ax1)
-sns.kdeplot(df_ordinal['Miles_driven_annually'],ax=ax1)
-
-ax2.set_title('After_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_ordinal_maxAbs['size_of_family'],ax=ax2)
-sns.kdeplot(df_ordinal_maxAbs['Miles_driven_annually'],ax=ax2)
-plt.show()
 
 
 # Normalizing the oneHotEncoded dataset using MaxAbsScaler
@@ -139,49 +96,7 @@ df_oneHot_maxAbs = scaler.fit_transform(df_oneHot)
 df_oneHot_maxAbs = pd.DataFrame(df_oneHot_maxAbs, columns=df_oneHot.columns)
 print(df_oneHot_maxAbs.head(10))
 
-#show result of MaxAbs scaling EngineHP and credit history
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(EngineHp-credit history)')
-sns.kdeplot(df_oneHot['EngineHP'],ax=ax1)
-sns.kdeplot(df_oneHot['credit_history'],ax=ax1)
 
-ax2.set_title('After_scaling(EngineHp-credit history)')
-sns.kdeplot(df_oneHot_maxAbs['EngineHP'],ax=ax2)
-sns.kdeplot(df_oneHot_maxAbs['credit_history'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Years_Experience and annual_claims
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_oneHot['Years_Experience'],ax=ax1)
-sns.kdeplot(df_oneHot['annual_claims'],ax=ax1)
-
-ax2.set_title('After_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_oneHot_maxAbs['Years_Experience'],ax=ax2)
-sns.kdeplot(df_oneHot_maxAbs['annual_claims'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Gender and Marital Status
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_oneHot['Gender'],ax=ax1)
-sns.kdeplot(df_oneHot['Marital_Status'],ax=ax1)
-
-ax2.set_title('After_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_oneHot_maxAbs['Gender'],ax=ax2)
-sns.kdeplot(df_oneHot_maxAbs['Marital_Status'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling size_of_family and Miles_driven_annually 
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_oneHot['size_of_family'],ax=ax1)
-sns.kdeplot(df_oneHot['Miles_driven_annually'],ax=ax1)
-
-ax2.set_title('After_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_oneHot_maxAbs['size_of_family'],ax=ax2)
-sns.kdeplot(df_oneHot_maxAbs['Miles_driven_annually'],ax=ax2)
-plt.show()
 
 # Normalizing the labelEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
@@ -189,49 +104,6 @@ df_label_maxAbs = scaler.fit_transform(df_label)
 df_label_maxAbs = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
 print(df_label_maxAbs.head(10))
 
-#show result of MaxAbs scaling EngineHP and credit history
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(EngineHp-credit history)')
-sns.kdeplot(df_label['EngineHP'],ax=ax1)
-sns.kdeplot(df_label['credit_history'],ax=ax1)
-
-ax2.set_title('After_scaling(EngineHp-credit history)')
-sns.kdeplot(df_label_maxAbs['EngineHP'],ax=ax2)
-sns.kdeplot(df_label_maxAbs['credit_history'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Years_Experience and annual_claims
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_label['Years_Experience'],ax=ax1)
-sns.kdeplot(df_label['annual_claims'],ax=ax1)
-
-ax2.set_title('After_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_label_maxAbs['Years_Experience'],ax=ax2)
-sns.kdeplot(df_label_maxAbs['annual_claims'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Gender and Marital Status
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_label['Gender'],ax=ax1)
-sns.kdeplot(df_label['Marital_Status'],ax=ax1)
-
-ax2.set_title('After_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_oneHot_maxAbs['Gender'],ax=ax2)
-sns.kdeplot(df_oneHot_maxAbs['Marital_Status'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling size_of_family and Miles_driven_annually 
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_label['size_of_family'],ax=ax1)
-sns.kdeplot(df_label['Miles_driven_annually'],ax=ax1)
-
-ax2.set_title('After_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_label_maxAbs['size_of_family'],ax=ax2)
-sns.kdeplot(df_label_maxAbs['Miles_driven_annually'],ax=ax2)
-plt.show()
 
 # Normalizing the ordinalEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
@@ -239,49 +111,7 @@ df_ordinal_robust = scaler.fit_transform(df_ordinal)
 df_ordinal_robust = pd.DataFrame(df_ordinal_robust, columns=df_ordinal.columns)
 print(df_ordinal_robust.head(10))
 
-#show result of MaxAbs scaling EngineHP and credit history
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(EngineHp-credit history)')
-sns.kdeplot(df_ordinal['EngineHP'],ax=ax1)
-sns.kdeplot(df_ordinal['credit_history'],ax=ax1)
 
-ax2.set_title('After_scaling(EngineHp-credit history)')
-sns.kdeplot(df_ordinal_robust['EngineHP'],ax=ax2)
-sns.kdeplot(df_ordinal_robust['credit_history'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Years_Experience and annual_claims
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_ordinal['Years_Experience'],ax=ax1)
-sns.kdeplot(df_ordinal['annual_claims'],ax=ax1)
-
-ax2.set_title('After_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_ordinal_robust['Years_Experience'],ax=ax2)
-sns.kdeplot(df_ordinal_robust['annual_claims'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Gender and Marital Status
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_ordinal['Gender'],ax=ax1)
-sns.kdeplot(df_ordinal['Marital_Status'],ax=ax1)
-
-ax2.set_title('After_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_ordinal_robust['Gender'],ax=ax2)
-sns.kdeplot(df_ordinal_robust['Marital_Status'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling size_of_family and Miles_driven_annually 
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_ordinal['size_of_family'],ax=ax1)
-sns.kdeplot(df_ordinal['Miles_driven_annually'],ax=ax1)
-
-ax2.set_title('After_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_ordinal_robust['size_of_family'],ax=ax2)
-sns.kdeplot(df_ordinal_robust['Miles_driven_annually'],ax=ax2)
-plt.show()
 
 # Normalizing the oneHotEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
@@ -289,11 +119,15 @@ df_oneHot_robust = scaler.fit_transform(df_oneHot)
 df_oneHot_robust = pd.DataFrame(df_oneHot_robust, columns=df_oneHot.columns)
 print(df_oneHot_robust.head(10))
 
+
+
 # Normalizing the labelEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
 df_label_robust = scaler.fit_transform(df_label)
 df_label_robust = pd.DataFrame(df_label_robust, columns=df_label.columns)
 print(df_label_robust.head(10))
+
+
 
 # Normalizing the ordinalEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
@@ -332,6 +166,49 @@ df_label_stand = pd.DataFrame(df_label_stand, columns=df_label.columns)
 print(df_label_stand.head(10))
 
 
+#show result of MaxAbs scaling EngineHP and credit history
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(EngineHp-credit history)')
+sns.kdeplot(df_label['EngineHP'],ax=ax1)
+sns.kdeplot(df_label['credit_history'],ax=ax1)
+
+ax2.set_title('After_scaling(EngineHp-credit history)')
+sns.kdeplot(df_label_minMax['EngineHP'],ax=ax2)
+sns.kdeplot(df_label_minMax['credit_history'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling Years_Experience and annual_claims
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
+sns.kdeplot(df_label['Years_Experience'],ax=ax1)
+sns.kdeplot(df_label['annual_claims'],ax=ax1)
+
+ax2.set_title('After_scaling(Years_Experience-annual_claims)')
+sns.kdeplot(df_label_minMax['Years_Experience'],ax=ax2)
+sns.kdeplot(df_label_minMax['annual_claims'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling Gender and Marital Status
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(Gender-Marital_Status)')
+sns.kdeplot(df_label['Gender'],ax=ax1)
+sns.kdeplot(df_label['Marital_Status'],ax=ax1)
+
+ax2.set_title('After_scaling(Gender-Marital_Status)')
+sns.kdeplot(df_label_minMax['Gender'],ax=ax2)
+sns.kdeplot(df_label_minMax['Marital_Status'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling size_of_family and Miles_driven_annually 
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
+sns.kdeplot(df_label['size_of_family'],ax=ax1)
+sns.kdeplot(df_label['Miles_driven_annually'],ax=ax1)
+
+ax2.set_title('After_scaling(size_of_family-Miles_driven_annually)')
+sns.kdeplot(df_label_minMax['size_of_family'],ax=ax2)
+sns.kdeplot(df_label_minMax['Miles_driven_annually'],ax=ax2)
+plt.show()
 
 #bar graph of target
 sns.countplot(df['target'])
