@@ -2,6 +2,8 @@ import warnings
 warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn import preprocessing
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
@@ -85,6 +87,62 @@ scaler = preprocessing.MaxAbsScaler()
 df_ordinal_maxAbs = scaler.fit_transform(df_ordinal)
 df_ordinal_maxAbs = pd.DataFrame(df_ordinal_maxAbs, columns=df_ordinal.columns)
 print(df_ordinal_maxAbs.head(10))
+
+#show result of MaxAbs scaling EngineHP and credit history
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(EngineHp-credit history)')
+sns.kdeplot(df_ordinal['EngineHP'],ax=ax1)
+sns.kdeplot(df_ordinal['credit_history'],ax=ax1)
+
+ax2.set_title('Before_scaling(EngineHp-credit history)')
+sns.kdeplot(df_ordinal_maxAbs['EngineHP'],ax=ax2)
+sns.kdeplot(df_ordinal_maxAbs['credit_history'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling Years_Experience and annual_claims
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
+sns.kdeplot(df_ordinal['Years_Experience'],ax=ax1)
+sns.kdeplot(df_ordinal['annual_claims'],ax=ax1)
+
+ax2.set_title('Before_scaling(Years_Experience-annual_claims)')
+sns.kdeplot(df_ordinal_maxAbs['Years_Experience'],ax=ax2)
+sns.kdeplot(df_ordinal_maxAbs['annual_claims'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling Gender and Marital Status
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(Gender-Marital_Status)')
+sns.kdeplot(df_ordinal['Gender'],ax=ax1)
+sns.kdeplot(df_ordinal['Marital_Status'],ax=ax1)
+
+ax2.set_title('Before_scaling(Gender-Marital_Status)')
+sns.kdeplot(df_ordinal_maxAbs['Gender'],ax=ax2)
+sns.kdeplot(df_ordinal_maxAbs['Marital_Status'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling Vehical_type and Miles_driven_annually 
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(Vehical_type-Miles_driven_annually)')
+sns.kdeplot(df_ordinal['Vehical_type'],ax=ax1)
+sns.kdeplot(df_ordinal['Miles_driven_annually'],ax=ax1)
+
+ax2.set_title('Before_scaling(Vehical_type-Miles_driven_annually)')
+sns.kdeplot(df_ordinal_maxAbs['Vehical_type'],ax=ax2)
+sns.kdeplot(df_ordinal_maxAbs['Miles_driven_annually'],ax=ax2)
+plt.show()
+
+#show result of MaxAbs scaling size_of_family and State 
+fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
+ax1.set_title('Before_scaling(size_of_family-State)')
+sns.kdeplot(df_ordinal['size_of_family'],ax=ax1)
+sns.kdeplot(df_ordinal['State'],ax=ax1)
+
+ax2.set_title('Before_scaling(size_of_family-State)')
+sns.kdeplot(df_ordinal_maxAbs['size_of_family'],ax=ax2)
+sns.kdeplot(df_ordinal_maxAbs['State'],ax=ax2)
+plt.show()
+
 
 # Normalizing the oneHotEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
