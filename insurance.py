@@ -365,6 +365,10 @@ plt.show()
 sns.boxplot(df['Gender'],df['size_of_family'])
 plt.show()
 
+#heatmap-pearson
+sns.heatmap(df.corr(method='pearson'))
+plt.title("pearson")
+plt.show()
 
 
 
