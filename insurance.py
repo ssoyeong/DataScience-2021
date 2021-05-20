@@ -8,6 +8,9 @@ from sklearn import preprocessing
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.cluster import KMeans
 
 pd.set_option('display.max_row', 100)
 pd.set_option('display.max_columns', 100)
@@ -199,7 +202,7 @@ sns.kdeplot(df_label_minMax['Gender'],ax=ax2)
 sns.kdeplot(df_label_minMax['Marital_Status'],ax=ax2)
 plt.show()
 
-#show result of MaxAbs scaling size_of_family and Miles_driven_annually 
+#show result of MaxAbs scaling size_of_family and Miles_driven_annually
 fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
 ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
 sns.kdeplot(df_label['size_of_family'],ax=ax1)
@@ -456,3 +459,51 @@ RF_y_predict = random_forest.predict(X_test);
 print("\n\n--------- Random Forest Algorithm")
 print(RF_y_predict[:50])
 print("Score: %.2f" %random_forest.score(X_test,y_test))
+
+
+# LinearRegression
+line_reg = LinearRegression();
+line_reg.fit(X_train, y_train)
+y_predict = line_reg.predict(X_test)
+
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % line_reg.score(X_test, y_test))
+
+# Polynomial Regression
+poly_reg = PolynomialFeatures(degree=2)
+X_poly_train = poly_reg.fit_transform(X_train)
+X_poly_test = poly_reg.fit_transform(X_test)
+pol_reg = LinearRegression()
+pol_reg.fit(X_poly_train, y_train)
+y_predict = line_reg.predict(X_test)
+
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
+
+# K-mean clustering
+df3 = df_label.copy()
+# Rename 'target' and 'annual_claims' features
+df3.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
+# Drop 'ID' feature
+df3.drop(['ID'], 1, inplace=True)
+
+# Split the dataset
+X_3 = df3.drop(['target'], 1).astype(float)
+y_3 = df3['target']
+X_train3, X_test3, y_train3, y_test3 = train_test_split(X_3, y_3, random_state=0)
+
+X_train3 = np.array(X_train3)
+X_test3 = np.array(X_test3)
+y_test3 = np.array(y_test3)
+
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(X_train3)
+correct = 0
+for i in range(len(X_test3)):
+    predict_me = np.array(X_test3[i].astype(float))
+    predict_me = predict_me.reshape(-1,len(predict_me))
+    prediction = kmeans.predict(predict_me)
+    if(prediction[0]==y_test3[i]):
+        correct += 1
+print("Score: %.2f" % (correct/len(X_test3)))
+
