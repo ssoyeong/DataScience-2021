@@ -22,7 +22,6 @@ df = df.drop(['Age_bucket','EngineHP_bucket','Years_Experience_bucket'
                  ,'Miles_driven_annually_bucket','credit_history_bucket'], axis=1)
 
 # Fill missing values
-df.fillna(df.mean(), inplace=True)
 df.fillna(axis=0, method='ffill',inplace=True)
 
 df_ordinal = df.copy()
