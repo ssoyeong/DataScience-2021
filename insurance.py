@@ -506,3 +506,21 @@ for i in range(len(X_test3)):
         correct += 1
 print("Score: %.2f" % (correct/len(X_test3)))
 
+#Make own module to predict 
+def process_module(df):
+   maxAbsScaler = preprocessing.MaxAbsScaler()
+   minmaxScaler = preprocessing.MinMaxScaler()
+   robustScaler = preprocessing.RobustScaler()
+   standardScaler = preprocessing.StandardScaler()
+   
+   df_maxAbs_scaled=maxAbsScaler.fit_transform(df)
+   df_maxAbs_scaled = = pd.DataFramd(df_maxAbs_scaled, columns=df.columns)
+   
+   df_minMax_scaled=minmaxScaler.fit_transform(df)
+   df_minMax_scaled = = pd.DataFramd(df_minMax_scaled, columns=df.columns)
+   
+   df_robust_scaled=robustScaler.fit_transform(df)
+   df_robust_scaled = = pd.DataFramd(df_robust_scaled, columns=df.columns)
+   
+   df_standard_scaled=standardScaler.fit_transform(df)
+   df_standard_scaled = = pd.DataFramd(df_standard_scaled, columns=df.columns)
