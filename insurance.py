@@ -11,6 +11,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.cluster import KMeans
+from sklearn.ensemble import BaggingRegressor
+from sklearn.tree import DecisionTreeRegressor
 
 pd.set_option('display.max_row', 100)
 pd.set_option('display.max_columns', 100)
@@ -479,6 +481,14 @@ y_predict = line_reg.predict(X_test)
 print("y_predict: \n", y_predict)
 print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
 
+
+#bagging algorithm
+model = BaggingRegressor(n_estimators=200,max_features=0.5,max_samples = 0.3)
+model.fit(X_train,y_train)
+y_predict = model.predict(X_test)
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % model.score(X_test, y_test))
+
 # K-mean clustering
 df3 = df_label.copy()
 # Rename 'target' and 'annual_claims' features
@@ -505,6 +515,8 @@ for i in range(len(X_test3)):
     if(prediction[0]==y_test3[i]):
         correct += 1
 print("Score: %.2f" % (correct/len(X_test3)))
+
+
 
 
 
