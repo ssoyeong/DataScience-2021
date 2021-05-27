@@ -11,7 +11,10 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.cluster import KMeans
-from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import BaggingClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeRegressor
 
 pd.set_option('display.max_row', 100)
@@ -25,6 +28,10 @@ df = df.drop(['Age_bucket','EngineHP_bucket','Years_Experience_bucket'
 
 # Fill missing values
 df.fillna(axis=0, method='ffill',inplace=True)
+
+#make target to category
+targets = df['annual_claims'].astype(np.int64)
+targets = targets.astype('category')
 
 df_ordinal = df.copy()
 df_oneHot = df.copy()
@@ -169,7 +176,7 @@ df_label_stand = scaler.fit_transform(df_label)
 df_label_stand = pd.DataFrame(df_label_stand, columns=df_label.columns)
 print(df_label_stand.head(10))
 
-
+"""
 #show result of MaxAbs scaling EngineHP and credit history
 fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
 ax1.set_title('Before_scaling(EngineHp-credit history)')
@@ -428,7 +435,7 @@ plt.show()
 sns.heatmap(df.corr(method='pearson'))
 plt.title("pearson")
 plt.show()
-
+"""
 
 
 
@@ -440,12 +447,27 @@ df2.drop(['ID'], 1, inplace=True)
 
 # Split the dataset
 X = df2.drop(['target'], 1)
-y = df2['target']
+y = targets
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+model = BaggingClassifier() #grid search 해야함
+params = {'n_estimators': [100,125,150],
+              'max_features': [0.1,0.4, 0.5,1],
+              'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+
+print("Do bagging regressor grid search")
+model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
+model_gscv.fit(X_train,y_train)
+print("Best param : ",model_gscv.best_params_)
+print("Best score : ",model_gscv.best_score_)
+prediction = model_gscv.predict(X_test)
+print(model_gscv.score(X_test,y_test))
+
 
 # Using KNN algorithm
 # Create and train a KNN classifier
-knn = KNeighborsRegressor(n_neighbors=5)
+knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(X_train, y_train)
 
 y_prec = knn.predict(X_test)
@@ -454,13 +476,20 @@ print(y_prec[0:100])
 print("Score: %.2f" % knn.score(X_test, y_test))
 
 
-random_forest = RandomForestRegressor(max_depth= 4, random_state= 0)
-random_forest.fit(X_train,y_train);
-RF_y_predict = random_forest.predict(X_test);
-print("\n\n--------- Random Forest Algorithm")
-print(RF_y_predict[:50])
-print("Score: %.2f" %random_forest.score(X_test,y_test))
-
+rfModel = RandomForestRegressor()
+params = {'n_estimators': [100,125,150],
+              'max_depth': [2,4,6,8],
+              'max_features': [0.1,0.4, 0.5,1],
+              'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+print("Do randomforest regressor grid search")
+rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+rfModel_gscv.fit(X_train,y_train)
+y_predict = rfModel_gscv.predict(X_test)
+print("Best param : ",rfModel_gscv.best_params_)
+print("Best score : ",rfModel_gscv.best_score_)
+print(rfModel_gscv.score(X_test,y_test))
+print("\n\n\n")
 
 # LinearRegression
 line_reg = LinearRegression();
@@ -482,12 +511,7 @@ print("y_predict: \n", y_predict)
 print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
 
 
-#bagging algorithm
-model = BaggingRegressor(n_estimators=200,max_features=0.5,max_samples = 0.3)
-model.fit(X_train,y_train)
-y_predict = model.predict(X_test)
-print("y_predict: \n", y_predict)
-print("Score: %.2f" % model.score(X_test, y_test))
+
 
 # K-mean clustering
 df3 = df_label.copy()
