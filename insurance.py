@@ -23,12 +23,15 @@ pd.set_option('display.max_columns', 100)
 # Read csv
 df = pd.read_excel('IT_3.xlsx')
 # Drop 5 columns
-df = df.drop(['Age_bucket','EngineHP_bucket','Years_Experience_bucket'
-                 ,'Miles_driven_annually_bucket','credit_history_bucket'], axis=1)
+
 
 # Fill missing values
 df.fillna(axis=0, method='ffill',inplace=True)
 
+df = df.drop(['Miles_driven_annually','Years_Experience','EngineHP','credit_history','Age_bucket'], axis=1)
+
+df['annual_claims']=df['annual_claims'].astype(np.int64)
+df['annual_claims']=df['annual_claims'].astype('category')
 #make target to category
 targets = df['annual_claims'].astype(np.int64)
 targets = targets.astype('category')
@@ -81,6 +84,16 @@ labelEnc.fit(df['State'])
 df_label['State'] = pd.DataFrame(labelEnc.transform(df['State']))
 
 
+df_label['EngineHP_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['EngineHP_bucket']))
+df_label['Years_Experience_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['Years_Experience_bucket']))
+df_label['Miles_driven_annually_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['Miles_driven_annually_bucket']))
+df_label['credit_history_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['credit_history_bucket']))
+
+
+""""
+','EngineHP_bucket','Years_Experience_bucket'   
+,'Miles_driven_annually_bucket','credit_history_bucket
+"""
 # Getting all the categorical variables in a list
 categoricalColumn = df.columns[df.dtypes == np.object].tolist()
 # Convert categorical features to numeric values using oneHotEncoder
@@ -89,16 +102,16 @@ for col in categoricalColumn:
         df_oneHot[col] = pd.get_dummies(df_oneHot[col], drop_first=True)
 
 df_oneHot = pd.get_dummies(df_oneHot)
+print(df_oneHot)
 
 
-
-
+"""
 # Normalizing the ordinalEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
 df_ordinal_maxAbs = scaler.fit_transform(df_ordinal)
 df_ordinal_maxAbs = pd.DataFrame(df_ordinal_maxAbs, columns=df_ordinal.columns)
 print(df_ordinal_maxAbs.head(10))
-
+"""
 
 
 # Normalizing the oneHotEncoded dataset using MaxAbsScaler
@@ -115,13 +128,13 @@ df_label_maxAbs = scaler.fit_transform(df_label)
 df_label_maxAbs = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
 print(df_label_maxAbs.head(10))
 
-
+"""
 # Normalizing the ordinalEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
 df_ordinal_robust = scaler.fit_transform(df_ordinal)
 df_ordinal_robust = pd.DataFrame(df_ordinal_robust, columns=df_ordinal.columns)
 print(df_ordinal_robust.head(10))
-
+"""
 
 
 # Normalizing the oneHotEncoded dataset using RobustScaler
@@ -139,12 +152,13 @@ df_label_robust = pd.DataFrame(df_label_robust, columns=df_label.columns)
 print(df_label_robust.head(10))
 
 
-
+"""
 # Normalizing the ordinalEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
 df_ordinal_minMax = scaler.fit_transform(df_ordinal)
 df_ordinal_minMax = pd.DataFrame(df_ordinal_minMax, columns=df_ordinal.columns)
 print(df_ordinal_minMax.head(10))
+"""
 
 # Normalizing the oneHotEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
@@ -158,11 +172,13 @@ df_label_minMax = scaler.fit_transform(df_label)
 df_label_minMax = pd.DataFrame(df_label_minMax, columns=df_label.columns)
 print(df_label_minMax.head(10))
 
+"""
 # Normalizing the ordinalEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
 df_ordinal_stand = scaler.fit_transform(df_ordinal)
 df_ordinal_stand = pd.DataFrame(df_ordinal_stand, columns=df_ordinal.columns)
 print(df_ordinal_stand.head(10))
+"""
 
 # Normalizing the oneHotEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
@@ -476,7 +492,7 @@ print(y_prec[0:100])
 print("Score: %.2f" % knn.score(X_test, y_test))
 
 
-rfModel = RandomForestRegressor()
+rfModel = RandomForestClassifier()
 params = {'n_estimators': [100,125,150],
               'max_depth': [2,4,6,8],
               'max_features': [0.1,0.4, 0.5,1],
