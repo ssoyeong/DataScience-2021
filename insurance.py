@@ -28,10 +28,11 @@ df = pd.read_excel('IT_3.xlsx')
 df = df.drop(['Miles_driven_annually', 'Years_Experience', 'EngineHP', 'credit_history'], axis=1)
 # Drop rows with Nan
 
-
-
 # Fill missing values
 df.fillna(axis=0, method='ffill', inplace=True)
+
+
+
 
 # Correlation of all features
 plt.figure(figsize=(15,15))
@@ -146,6 +147,8 @@ print(df_label.isnull().sum())
 # 인코딩 거치면 null 값이 생깁니다..
 df_label = df_label.dropna()
 
+df['annual_claims']=df['annual_claims'].astype(np.int64)
+
 # Getting all the categorical variables in a list
 categoricalColumn = df.columns[df.dtypes == np.object].tolist()
 # Convert categorical features to numeric values using oneHotEncoder
@@ -155,13 +158,15 @@ for col in categoricalColumn:
 
 df_oneHot = pd.get_dummies(df_oneHot)
 
-
+df['annual_claims']=df['annual_claims'].astype('category')
+y = df['annual_claims']
 
 # Split the dataset
-y = df['annual_claims']
+
 X1 = df_ordinal.drop(['annual_claims'], 1)
 X2 = df_label.drop(['annual_claims'], 1)
 X3 = df_oneHot.drop(['annual_claims'], 1)
+
 
 
 X1_train, X1_test, y1_train, y1_test = train_test_split(X1, y, random_state=0)
@@ -563,124 +568,124 @@ X_train = df_label_stand_train
 X_test = df_label_stand_test
 y_train = y2_train
 y_test = y2_test
+"""
+model = BaggingClassifier() #grid search 해야함
+params = {'n_estimators': [100,125,150],
+              'max_features': [0.1,0.4, 0.5,1],
+              'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
 
-# model = BaggingClassifier() #grid search 해야함
-# params = {'n_estimators': [100,125,150],
-#               'max_features': [0.1,0.4, 0.5,1],
-#               'max_samples':[0.1, 0.2, 0.3,0.5,1]
-#           };
+print("\n---------- Bagging classifier grid search ----------")
+model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
+model_gscv.fit(X_train,y_train)
+print("Best param : ",model_gscv.best_params_)
+print("Best score : ",model_gscv.best_score_)
+prediction = model_gscv.predict(X_test)
+print(model_gscv.score(X_test,y_test))
+
+
+# Using KNN algorithm
+# Create and train a KNN classifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+y_prec = knn.predict(X_test)
+print("\n---------- KNN classifier  ----------")
+print(y_prec[0:100])
+print("Score: %.2f" % knn.score(X_test, y_test))
+
+
+rfModel = RandomForestClassifier()
+params = {'n_estimators': [100,125,150],
+             'max_depth': [2,4,6,8],
+               'max_features': [0.1,0.4, 0.5,1],
+               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+print("\n----------Random Forest classifier grid search ----------")
+rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+rfModel_gscv.fit(X_train,y_train)
+y_predict = rfModel_gscv.predict(X_test)
+print("Best param : ",rfModel_gscv.best_params_)
+print("Best score : ",rfModel_gscv.best_score_)
+print(rfModel_gscv.score(X_test,y_test))
+print("\n\n\n")
+
+
+y_test = y_test.astype(np.int64)
+y_train = y_train.astype(np.int)
+
+models = BaggingRegressor()
+params = {'n_estimators': [100,125,150],
+              'max_features': [0.1,0.4, 0.5,1],
+              'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+
+print("\n---------- Bagging regressor grid search ----------")
+models_gscv = GridSearchCV(models,param_grid = params,cv=5,scoring='accuracy')
+models_gscv.fit(X_train,y_train)
+print("Best param : ",models_gscv.best_params_)
+print("Best score : ",models_gscv.best_score_)
+print(models_gscv.score(X_test,y_test))
+
+
+# Using KNN algorithm
+# Create and train a KNN classifier
+knnR = KNeighborsRegressor(n_neighbors=5)
+knnR.fit(X_train, y_train)
+print("\n---------- KNN regressor----------")
+print("Score: %.2f" % knnR.score(X_test, y_test))
+
+
+rfModelR = RandomForestRegressor()
+params = {'n_estimators': [100,125,150],
+             'max_depth': [2,4,6,8],
+               'max_features': [0.1,0.4, 0.5,1],
+               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+print("\n----------Random Forest regressor grid search ----------")
+rfModelR_gscv = GridSearchCV(rfModelR,params,scoring = 'r2')
+rfModelR_gscv.fit(X_train,y_train)
+print("Best param : ",rfModelR_gscv.best_params_)
+print("Best score : ",rfModelR_gscv.best_score_)
+print(rfModelR_gscv.score(X_test,y_test))
+print("\n\n\n")
+"""
+# # LinearRegression
+line_reg = LinearRegression();
+line_reg.fit(X_train, y_train)
+y_predict = line_reg.predict(X_test)
+print("\n---------- KNN LinearRegression ----------")
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % line_reg.score(X_test, y_test))
 #
-# print("\n---------- Bagging classifier grid search ----------")
-# model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
-# model_gscv.fit(X_train,y_train)
-# print("Best param : ",model_gscv.best_params_)
-# print("Best score : ",model_gscv.best_score_)
-# prediction = model_gscv.predict(X_test)
-# print(model_gscv.score(X_test,y_test))
+# # Polynomial Regression
+poly_reg = PolynomialFeatures(degree=2)
+X_poly_train = poly_reg.fit_transform(X_train)
+X_poly_test = poly_reg.fit_transform(X_test)
+pol_reg = LinearRegression()
+pol_reg.fit(X_poly_train, y_train)
+y_predict = line_reg.predict(X_test)
+print("\n---------- Polynomial algorithm ----------")
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
+
+
+
 #
+
 #
-# # Using KNN algorithm
-# # Create and train a KNN classifier
-# knn = KNeighborsClassifier(n_neighbors=5)
-# knn.fit(X_train, y_train)
-#
-# y_prec = knn.predict(X_test)
-# print("\n---------- KNN classifier  ----------")
-# print(y_prec[0:100])
-# print("Score: %.2f" % knn.score(X_test, y_test))
-#
-#
-# rfModel = RandomForestClassifier()
-# params = {'n_estimators': [100,125,150],
-#              'max_depth': [2,4,6,8],
-#                'max_features': [0.1,0.4, 0.5,1],
-#                'max_samples':[0.1, 0.2, 0.3,0.5,1]
-#           };
-# print("\n----------Random Forest classifier grid search ----------")
-# rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
-# rfModel_gscv.fit(X_train,y_train)
-# y_predict = rfModel_gscv.predict(X_test)
-# print("Best param : ",rfModel_gscv.best_params_)
-# print("Best score : ",rfModel_gscv.best_score_)
-# print(rfModel_gscv.score(X_test,y_test))
-# print("\n\n\n")
-#
-#
-# model = BaggingRegressor() #grid search 해야함
-# params = {'n_estimators': [100,125,150],
-#               'max_features': [0.1,0.4, 0.5,1],
-#               'max_samples':[0.1, 0.2, 0.3,0.5,1]
-#           };
-#
-# print("Do bagging regressor grid search")
-# model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
-# model_gscv.fit(X_train,y_train)
-# print("Best param : ",model_gscv.best_params_)
-# print("Best score : ",model_gscv.best_score_)
-# prediction = model_gscv.predict(X_test)
-# print(model_gscv.score(X_test,y_test))
-#
-#
-# # Using KNN algorithm
-# # Create and train a KNN classifier
-# knn = KNeighborsRegressor(n_neighbors=5)
-# knn.fit(X_train, y_train)
-#
-# y_prec = knn.predict(X_test)
-# print("\n---------- KNN algorithm ----------")
-# print(y_prec[0:100])
-# print("Score: %.2f" % knn.score(X_test, y_test))
-#
-#
-# rfModel = RandomForestRegressor()
-# params = {'n_estimators': [100,125,150],
-#              'max_depth': [2,4,6,8],
-#                'max_features': [0.1,0.4, 0.5,1],
-#                'max_samples':[0.1, 0.2, 0.3,0.5,1]
-#           };
-# print("\n----------Random Forest grid search ----------")
-# rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
-# rfModel_gscv.fit(X_train,y_train)
-# y_predict = rfModel_gscv.predict(X_test)
-# print("Best param : ",rfModel_gscv.best_params_)
-# print("Best score : ",rfModel_gscv.best_score_)
-# print(rfModel_gscv.score(X_test,y_test))
-# print("\n\n\n")
-#
-# # # LinearRegression
-# line_reg = LinearRegression();
-# line_reg.fit(X_train, y_train)
-# y_predict = line_reg.predict(X_test)
-# print("\n---------- KNN LinearRegression ----------")
-# print("y_predict: \n", y_predict)
-# print("Score: %.2f" % line_reg.score(X_test, y_test))
-# #
-# # # Polynomial Regression
-# poly_reg = PolynomialFeatures(degree=2)
-# X_poly_train = poly_reg.fit_transform(X_train)
-# X_poly_test = poly_reg.fit_transform(X_test)
-# pol_reg = LinearRegression()
-# pol_reg.fit(X_poly_train, y_train)
-# y_predict = line_reg.predict(X_test)
-# print("\n---------- Polynomial algorithm ----------")
-# print("y_predict: \n", y_predict)
-# print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
-#
-#
-#
-# #
-#
-# #
-# kmeans = KMeans(n_clusters=2)
-# kmeans.fit(X_train)
-# correct = 0
-# for i in range(len(X_test)):
-#      predict_me = np.array(X_test[i].astype(float))
-#      predict_me = predict_me.reshape(-1,len(predict_me))
-#      prediction = kmeans.predict(predict_me)
-#      if(prediction[0]==y_test[i]):
-#          correct += 1
-# print("Score: %.2f" % (correct/len(X_test)))
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(X_train)
+correct = 0
+for i in range(len(X_test)):
+     predict_me = np.array(X_test[i].astype(float))
+     predict_me = predict_me.reshape(-1,len(predict_me))
+     prediction = kmeans.predict(predict_me)
+     if(prediction[0]==y_test[i]):
+         correct += 1
+print("Score: %.2f" % (correct/len(X_test)))
+
+
 
 
 
@@ -784,3 +789,4 @@ def algorithm_module(X_train, X_test, y_train, y_test):
 df_test_model = df_ordinal.copy()
 print("\n\n============================== Using own module ==============================")
 process_module(df_test_model, 'annual_claims')
+# process_module(df_test_model, 'target')
