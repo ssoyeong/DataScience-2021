@@ -7,6 +7,7 @@ import seaborn as sns
 from sklearn import preprocessing
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -24,19 +25,19 @@ pd.set_option('display.max_columns', 100)
 df = pd.read_excel('IT_3.xlsx')
 
 # # Drop 5 columns
-# df = df.drop(['Age_bucket','EngineHP_bucket','Years_Experience_bucket'
-#                  ,'Miles_driven_annually_bucket','credit_history_bucket'], axis=1)
-
+df = df.drop(['Miles_driven_annually', 'Years_Experience', 'EngineHP', 'credit_history'], axis=1)
 # Drop rows with Nan
-df = df.dropna(subset=['Age_bucket'])
-df = df.dropna(subset=['EngineHP_bucket'])
-df = df.dropna(subset=['Years_Experience_bucket'])
-df = df.dropna(subset=['Miles_driven_annually_bucket'])
-df = df.dropna(subset=['credit_history_bucket'])
+
+
 
 # Fill missing values
 df.fillna(axis=0, method='ffill', inplace=True)
 
+# Correlation of all features
+plt.figure(figsize=(15,15))
+sns.heatmap(df.corr(method='pearson'), annot=True, fmt='.2f', linewidths=5, cmap='Blues')
+plt.title("Correlation of all features")
+plt.show()
 
 # #make target to category
 # targets = df['annual_claims'].astype(np.int64)
@@ -156,89 +157,138 @@ df_oneHot = pd.get_dummies(df_oneHot)
 
 
 
+# Split the dataset
+y = df['annual_claims']
+X1 = df_ordinal.drop(['annual_claims'], 1)
+X2 = df_label.drop(['annual_claims'], 1)
+X3 = df_oneHot.drop(['annual_claims'], 1)
+
+
+X1_train, X1_test, y1_train, y1_test = train_test_split(X1, y, random_state=0)
+X2_train, X2_test, y2_train, y2_test = train_test_split(X2, y, random_state=0)
+X3_train, X3_test, y3_train, y3_test = train_test_split(X3, y, random_state=0)
+
+
 
 # Normalizing the ordinalEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
-df_ordinal_maxAbs = scaler.fit_transform(df_ordinal)
-df_ordinal_maxAbs = pd.DataFrame(df_ordinal_maxAbs, columns=df_ordinal.columns)
-print(df_ordinal_maxAbs.head(10))
+df_ordinal_maxAbs_train = scaler.fit_transform(X1_train)
+df_ordinal_maxAbs_train = pd.DataFrame(df_ordinal_maxAbs_train, columns=X1_train.columns)
+
+df_ordinal_maxAbs_test = scaler.fit_transform(X1_test)
+df_ordinal_maxAbs_test = pd.DataFrame(df_ordinal_maxAbs_test, columns=X1_test.columns)
+print(df_ordinal_maxAbs_train.head(10))
 
 
 
 # Normalizing the oneHotEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
-df_oneHot_maxAbs = scaler.fit_transform(df_oneHot)
-df_oneHot_maxAbs = pd.DataFrame(df_oneHot_maxAbs, columns=df_oneHot.columns)
-print(df_oneHot_maxAbs.head(10))
+df_oneHot_maxAbs_train = scaler.fit_transform(X3_train)
+df_oneHot_maxAbs_train = pd.DataFrame(df_oneHot_maxAbs_train, columns=X3_train.columns)
+
+df_oneHot_maxAbs_test = scaler.fit_transform(X3_test)
+df_oneHot_maxAbs_test = pd.DataFrame(df_oneHot_maxAbs_test, columns=X3_test.columns)
+print(df_oneHot_maxAbs_test.head(10))
 
 
 
 # Normalizing the labelEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
-df_label_maxAbs = scaler.fit_transform(df_label)
-df_label_maxAbs = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
-print(df_label_maxAbs.head(10))
+df_label_maxAbs_train = scaler.fit_transform(X2_train)
+df_label_maxAbs_train = pd.DataFrame(df_label_maxAbs_train, columns=X2_train.columns)
+
+df_label_maxAbs_test = scaler.fit_transform(X2_test)
+df_label_maxAbs_test = pd.DataFrame(df_label_maxAbs_test, columns=X2_test.columns)
+print(df_label_maxAbs_test.head(10))
 
 
 # Normalizing the ordinalEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
-df_ordinal_robust = scaler.fit_transform(df_ordinal)
-df_ordinal_robust = pd.DataFrame(df_ordinal_robust, columns=df_ordinal.columns)
-print(df_ordinal_robust.head(10))
+df_ordinal_robust_train = scaler.fit_transform(X1_train)
+df_ordinal_robust_train = pd.DataFrame(df_ordinal_robust_train, columns=X1_train.columns)
+
+df_ordinal_robust_test = scaler.fit_transform(X1_test)
+df_ordinal_robust_test = pd.DataFrame(df_ordinal_robust_test, columns=X1_test.columns)
+print(df_ordinal_robust_test.head(10))
 
 
 
 # Normalizing the oneHotEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
-df_oneHot_robust = scaler.fit_transform(df_oneHot)
-df_oneHot_robust = pd.DataFrame(df_oneHot_robust, columns=df_oneHot.columns)
-print(df_oneHot_robust.head(10))
+df_oneHot_robust_train = scaler.fit_transform(X3_train)
+df_oneHot_robust_train = pd.DataFrame(df_oneHot_robust_train, columns=X3_train.columns)
+
+df_oneHot_robust_test = scaler.fit_transform(X3_test)
+df_oneHot_robust_test = pd.DataFrame(df_oneHot_robust_test, columns=X3_test.columns)
+print(df_oneHot_robust_test.head(10))
 
 
 
 # Normalizing the labelEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
-df_label_robust = scaler.fit_transform(df_label)
-df_label_robust = pd.DataFrame(df_label_robust, columns=df_label.columns)
-print(df_label_robust.head(10))
+df_label_robust_train = scaler.fit_transform(X2_train)
+df_label_robust_train = pd.DataFrame(df_label_robust_train, columns=X2_train.columns)
+
+df_label_robust_test = scaler.fit_transform(X2_test)
+df_label_robust_test = pd.DataFrame(df_label_robust_test, columns=X2_test.columns)
+print(df_label_robust_test.head(10))
 
 
 
 # Normalizing the ordinalEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
-df_ordinal_minMax = scaler.fit_transform(df_ordinal)
-df_ordinal_minMax = pd.DataFrame(df_ordinal_minMax, columns=df_ordinal.columns)
-print(df_ordinal_minMax.head(10))
+df_ordinal_minMax_train = scaler.fit_transform(X1_train)
+df_ordinal_minMax_train = pd.DataFrame(df_ordinal_minMax_train, columns=X1_train.columns)
+
+
+df_ordinal_minMax_test = scaler.fit_transform(X1_test)
+df_ordinal_minMax_test = pd.DataFrame(df_ordinal_minMax_test, columns=X1_test.columns)
+print(df_ordinal_minMax_test.head(10))
 
 # Normalizing the oneHotEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
-df_oneHot_minMax = scaler.fit_transform(df_oneHot)
-df_oneHot_minMax = pd.DataFrame(df_oneHot_minMax, columns=df_oneHot.columns)
-print(df_oneHot_minMax.head(10))
+df_oneHot_minMax_train = scaler.fit_transform(X3_train)
+df_oneHot_minMax_train = pd.DataFrame(df_oneHot_minMax_train, columns=X3_train.columns)
+
+df_oneHot_minMax_test = scaler.fit_transform(X3_test)
+df_oneHot_minMax_test = pd.DataFrame(df_oneHot_minMax_test, columns=X3_test.columns)
+print(df_oneHot_minMax_test.head(10))
 
 # Normalizing the labelEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
-df_label_minMax = scaler.fit_transform(df_label)
-df_label_minMax = pd.DataFrame(df_label_minMax, columns=df_label.columns)
-print(df_label_minMax.head(10))
+df_label_minMax_train = scaler.fit_transform(X2_train)
+df_label_minMax_train = pd.DataFrame(df_label_minMax_train, columns=X2_train.columns)
+
+df_label_minMax_test = scaler.fit_transform(X2_test)
+df_label_minMax_test = pd.DataFrame(df_label_minMax_test, columns=X2_test.columns)
+print(df_label_minMax_test.head(10))
 
 # Normalizing the ordinalEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
-df_ordinal_stand = scaler.fit_transform(df_ordinal)
-df_ordinal_stand = pd.DataFrame(df_ordinal_stand, columns=df_ordinal.columns)
-print(df_ordinal_stand.head(10))
+df_ordinal_stand_train = scaler.fit_transform(X1_train)
+df_ordinal_stand_train = pd.DataFrame(df_ordinal_stand_train, columns=X1_train.columns)
+
+df_ordinal_stand_test = scaler.fit_transform(X1_test)
+df_ordinal_stand_test = pd.DataFrame(df_ordinal_stand_test, columns=X1_test.columns)
+print(df_ordinal_stand_test.head(10))
 
 # Normalizing the oneHotEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
-df_oneHot_stand = scaler.fit_transform(df_oneHot)
-df_oneHot_stand = pd.DataFrame(df_oneHot_stand, columns=df_oneHot.columns)
-print(df_oneHot_stand.head(10))
+df_oneHot_stand_train = scaler.fit_transform(X3_train)
+df_oneHot_stand_train = pd.DataFrame(df_oneHot_stand_train, columns=X3_train.columns)
+
+df_oneHot_stand_test = scaler.fit_transform(X3_test)
+df_oneHot_stand_test = pd.DataFrame(df_oneHot_stand_test, columns=X3_test.columns)
+print(df_oneHot_stand_test.head(10))
 
 # Normalizing the labelEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
-df_label_stand = scaler.fit_transform(df_label)
-df_label_stand = pd.DataFrame(df_label_stand, columns=df_label.columns)
-print(df_label_stand.head(10))
+df_label_stand_train = scaler.fit_transform(X2_train)
+df_label_stand_train = pd.DataFrame(df_label_stand_train, columns=X2_train.columns)
+
+df_label_stand_test = scaler.fit_transform(X2_test)
+df_label_stand_test = pd.DataFrame(df_label_stand_test, columns=X2_test.columns)
+print(df_label_stand_test.head(10))
 
 """
 #show result of MaxAbs scaling EngineHP and credit history
@@ -503,28 +553,60 @@ plt.show()
 
 
 
-df2 = df_label_stand.copy()
 # # Rename 'target' and 'annual_claims' features
 # df2.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
 
 # Drop 'ID' feature
-df2.drop(['ID'], 1, inplace=True)
-
-# Correlation of all features
-plt.figure(figsize=(15,15))
-sns.heatmap(df2.corr(method='pearson'), annot=True, fmt='.2f', linewidths=5, cmap='Blues')
-plt.title("Correlation of all features")
-plt.show()
 
 
-# Split the dataset
-X = df2.drop(['annual_claims'], 1)
-y = df2['annual_claims'].astype('int64')
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-
+X_train = df_label_stand_train
+X_test = df_label_stand_test
+y_train = y2_train
+y_test = y2_test
 
 model = BaggingClassifier() #grid search 해야함
+params = {'n_estimators': [100,125,150],
+              'max_features': [0.1,0.4, 0.5,1],
+              'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+
+print("\n---------- Bagging classifier grid search ----------")
+model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
+model_gscv.fit(X_train,y_train)
+print("Best param : ",model_gscv.best_params_)
+print("Best score : ",model_gscv.best_score_)
+prediction = model_gscv.predict(X_test)
+print(model_gscv.score(X_test,y_test))
+
+
+# Using KNN algorithm
+# Create and train a KNN classifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+y_prec = knn.predict(X_test)
+print("\n---------- KNN classifier  ----------")
+print(y_prec[0:100])
+print("Score: %.2f" % knn.score(X_test, y_test))
+
+
+rfModel = RandomForestClassifier()
+params = {'n_estimators': [100,125,150],
+             'max_depth': [2,4,6,8],
+               'max_features': [0.1,0.4, 0.5,1],
+               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+print("\n----------Random Forest classifier grid search ----------")
+rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+rfModel_gscv.fit(X_train,y_train)
+y_predict = rfModel_gscv.predict(X_test)
+print("Best param : ",rfModel_gscv.best_params_)
+print("Best score : ",rfModel_gscv.best_score_)
+print(rfModel_gscv.score(X_test,y_test))
+print("\n\n\n")
+
+
+model = BaggingRegressor() #grid search 해야함
 params = {'n_estimators': [100,125,150],
               'max_features': [0.1,0.4, 0.5,1],
               'max_samples':[0.1, 0.2, 0.3,0.5,1]
@@ -541,7 +623,7 @@ print(model_gscv.score(X_test,y_test))
 
 # Using KNN algorithm
 # Create and train a KNN classifier
-knn = KNeighborsClassifier(n_neighbors=5)
+knn = KNeighborsRegressor(n_neighbors=5)
 knn.fit(X_train, y_train)
 
 y_prec = knn.predict(X_test)
@@ -549,70 +631,56 @@ print("\n---------- KNN algorithm ----------")
 print(y_prec[0:100])
 print("Score: %.2f" % knn.score(X_test, y_test))
 
-#
-# rfModel = RandomForestRegressor()
-# params = {'n_estimators': [100,125,150],
-#               'max_depth': [2,4,6,8],
-#               'max_features': [0.1,0.4, 0.5,1],
-#               'max_samples':[0.1, 0.2, 0.3,0.5,1]
-#           };
-# print("Do randomforest regressor grid search")
-# rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
-# rfModel_gscv.fit(X_train,y_train)
-# y_predict = rfModel_gscv.predict(X_test)
-# print("Best param : ",rfModel_gscv.best_params_)
-# print("Best score : ",rfModel_gscv.best_score_)
-# print(rfModel_gscv.score(X_test,y_test))
-# print("\n\n\n")
-#
+
+rfModel = RandomForestRegressor()
+params = {'n_estimators': [100,125,150],
+             'max_depth': [2,4,6,8],
+               'max_features': [0.1,0.4, 0.5,1],
+               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+          };
+print("\n----------Random Forest grid search ----------")
+rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+rfModel_gscv.fit(X_train,y_train)
+y_predict = rfModel_gscv.predict(X_test)
+print("Best param : ",rfModel_gscv.best_params_)
+print("Best score : ",rfModel_gscv.best_score_)
+print(rfModel_gscv.score(X_test,y_test))
+print("\n\n\n")
+
 # # LinearRegression
-# line_reg = LinearRegression();
-# line_reg.fit(X_train, y_train)
-# y_predict = line_reg.predict(X_test)
-#
-# print("y_predict: \n", y_predict)
-# print("Score: %.2f" % line_reg.score(X_test, y_test))
+line_reg = LinearRegression();
+line_reg.fit(X_train, y_train)
+y_predict = line_reg.predict(X_test)
+print("\n---------- KNN LinearRegression ----------")
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % line_reg.score(X_test, y_test))
 #
 # # Polynomial Regression
-# poly_reg = PolynomialFeatures(degree=2)
-# X_poly_train = poly_reg.fit_transform(X_train)
-# X_poly_test = poly_reg.fit_transform(X_test)
-# pol_reg = LinearRegression()
-# pol_reg.fit(X_poly_train, y_train)
-# y_predict = line_reg.predict(X_test)
+poly_reg = PolynomialFeatures(degree=2)
+X_poly_train = poly_reg.fit_transform(X_train)
+X_poly_test = poly_reg.fit_transform(X_test)
+pol_reg = LinearRegression()
+pol_reg.fit(X_poly_train, y_train)
+y_predict = line_reg.predict(X_test)
+print("\n---------- Polynomial algorithm ----------")
+print("y_predict: \n", y_predict)
+print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
+
+
+
 #
-# print("y_predict: \n", y_predict)
-# print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
+
 #
-#
-#
-#
-# # K-mean clustering
-# df3 = df_label.copy()
-# # Rename 'target' and 'annual_claims' features
-# df3.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
-# # Drop 'ID' feature
-# df3.drop(['ID'], 1, inplace=True)
-#
-# # Split the dataset
-# X_3 = df3.drop(['target'], 1).astype(float)
-# y_3 = df3['target']
-# X_train3, X_test3, y_train3, y_test3 = train_test_split(X_3, y_3, random_state=0)
-#
-# X_train3 = np.array(X_train3)
-# X_test3 = np.array(X_test3)
-# y_test3 = np.array(y_test3)
-#
-# kmeans = KMeans(n_clusters=2)
-# kmeans.fit(X_train3)
-# correct = 0
-# for i in range(len(X_test3)):
-#     predict_me = np.array(X_test3[i].astype(float))
-#     predict_me = predict_me.reshape(-1,len(predict_me))
-#     prediction = kmeans.predict(predict_me)
-#     if(prediction[0]==y_test3[i]):
-#         correct += 1
-# print("Score: %.2f" % (correct/len(X_test3)))
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(X_train)
+correct = 0
+for i in range(len(X_test)):
+     predict_me = np.array(X_test[i].astype(float))
+     predict_me = predict_me.reshape(-1,len(predict_me))
+     prediction = kmeans.predict(predict_me)
+     if(prediction[0]==y_test[i]):
+         correct += 1
+print("Score: %.2f" % (correct/len(X_test)))
 
 
 
