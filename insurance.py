@@ -90,10 +90,6 @@ df_label['Miles_driven_annually_bucket'] = pd.DataFrame(labelEnc.fit_transform(d
 df_label['credit_history_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['credit_history_bucket']))
 
 
-""""
-','EngineHP_bucket','Years_Experience_bucket'   
-,'Miles_driven_annually_bucket','credit_history_bucket
-"""
 # Getting all the categorical variables in a list
 categoricalColumn = df.columns[df.dtypes == np.object].tolist()
 # Convert categorical features to numeric values using oneHotEncoder
@@ -192,7 +188,7 @@ df_label_stand = scaler.fit_transform(df_label)
 df_label_stand = pd.DataFrame(df_label_stand, columns=df_label.columns)
 print(df_label_stand.head(10))
 
-"""
+
 #show result of MaxAbs scaling EngineHP and credit history
 fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
 ax1.set_title('Before_scaling(EngineHp-credit history)')
@@ -451,7 +447,6 @@ plt.show()
 sns.heatmap(df.corr(method='pearson'))
 plt.title("pearson")
 plt.show()
-"""
 
 
 
