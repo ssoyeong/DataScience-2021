@@ -22,19 +22,26 @@ pd.set_option('display.max_columns', 100)
 
 # Read csv
 df = pd.read_excel('IT_3.xlsx')
-# Drop 5 columns
 
+# # Drop 5 columns
+# df = df.drop(['Age_bucket','EngineHP_bucket','Years_Experience_bucket'
+#                  ,'Miles_driven_annually_bucket','credit_history_bucket'], axis=1)
+
+# Drop rows with Nan
+df = df.dropna(subset=['Age_bucket'])
+df = df.dropna(subset=['EngineHP_bucket'])
+df = df.dropna(subset=['Years_Experience_bucket'])
+df = df.dropna(subset=['Miles_driven_annually_bucket'])
+df = df.dropna(subset=['credit_history_bucket'])
 
 # Fill missing values
-df.fillna(axis=0, method='ffill',inplace=True)
+df.fillna(axis=0, method='ffill', inplace=True)
 
-df = df.drop(['Miles_driven_annually','Years_Experience','EngineHP','credit_history','Age_bucket'], axis=1)
 
-df['annual_claims']=df['annual_claims'].astype(np.int64)
-df['annual_claims']=df['annual_claims'].astype('category')
-#make target to category
-targets = df['annual_claims'].astype(np.int64)
-targets = targets.astype('category')
+# #make target to category
+# targets = df['annual_claims'].astype(np.int64)
+# targets = targets.astype('category')
+
 
 df_ordinal = df.copy()
 df_oneHot = df.copy()
@@ -84,11 +91,59 @@ labelEnc.fit(df['State'])
 df_label['State'] = pd.DataFrame(labelEnc.transform(df['State']))
 
 
-df_label['EngineHP_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['EngineHP_bucket']))
-df_label['Years_Experience_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['Years_Experience_bucket']))
-df_label['Miles_driven_annually_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['Miles_driven_annually_bucket']))
-df_label['credit_history_bucket'] = pd.DataFrame(labelEnc.fit_transform(df['credit_history_bucket']))
+# Convert 'Age_bucket' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['Age_bucket'])
+ordEnc.fit(X)
+df_ordinal['Age_bucket'] = pd.DataFrame(ordEnc.transform(X))
 
+# Convert 'Age_bucket' features to numeric values using labelEncoder
+labelEnc.fit(df['Age_bucket'])
+df_label['Age_bucket'] = pd.DataFrame(labelEnc.transform(df['Age_bucket']))
+
+
+# Convert 'EngineHP_bucket' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['EngineHP_bucket'])
+ordEnc.fit(X)
+df_ordinal['EngineHP_bucket'] = pd.DataFrame(ordEnc.transform(X))
+
+# Convert 'EngineHP_bucket' features to numeric values using labelEncoder
+labelEnc.fit(df['EngineHP_bucket'])
+df_label['EngineHP_bucket'] = pd.DataFrame(labelEnc.transform(df['EngineHP_bucket']))
+
+
+# Convert 'Years_Experience_bucket' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['Years_Experience_bucket'])
+ordEnc.fit(X)
+df_ordinal['Years_Experience_bucket'] = pd.DataFrame(ordEnc.transform(X))
+
+# Convert 'Years_Experience_bucket' features to numeric values using labelEncoder
+labelEnc.fit(df['Years_Experience_bucket'])
+df_label['Years_Experience_bucket'] = pd.DataFrame(labelEnc.transform(df['Years_Experience_bucket']))
+
+
+# Convert 'Miles_driven_annually_bucket' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['Miles_driven_annually_bucket'])
+ordEnc.fit(X)
+df_ordinal['Miles_driven_annually_bucket'] = pd.DataFrame(ordEnc.transform(X))
+
+# Convert 'Miles_driven_annually_bucket' features to numeric values using labelEncoder
+labelEnc.fit(df['Miles_driven_annually_bucket'])
+df_label['Miles_driven_annually_bucket'] = pd.DataFrame(labelEnc.transform(df['Miles_driven_annually_bucket']))
+
+
+# Convert 'credit_history_bucket' features to numeric values using ordinalEncoder
+X = pd.DataFrame(df['credit_history_bucket'])
+ordEnc.fit(X)
+df_ordinal['credit_history_bucket'] = pd.DataFrame(ordEnc.transform(X))
+
+# Convert 'credit_history_bucket' features to numeric values using labelEncoder
+labelEnc.fit(df['credit_history_bucket'])
+df_label['credit_history_bucket'] = pd.DataFrame(labelEnc.transform(df['credit_history_bucket']))
+
+print("=======isNan")
+print(df_label.isnull().sum())
+# 인코딩 거치면 null 값이 생깁니다..
+df_label = df_label.dropna()
 
 # Getting all the categorical variables in a list
 categoricalColumn = df.columns[df.dtypes == np.object].tolist()
@@ -98,16 +153,16 @@ for col in categoricalColumn:
         df_oneHot[col] = pd.get_dummies(df_oneHot[col], drop_first=True)
 
 df_oneHot = pd.get_dummies(df_oneHot)
-print(df_oneHot)
 
 
-"""
+
+
 # Normalizing the ordinalEncoded dataset using MaxAbsScaler
 scaler = preprocessing.MaxAbsScaler()
 df_ordinal_maxAbs = scaler.fit_transform(df_ordinal)
 df_ordinal_maxAbs = pd.DataFrame(df_ordinal_maxAbs, columns=df_ordinal.columns)
 print(df_ordinal_maxAbs.head(10))
-"""
+
 
 
 # Normalizing the oneHotEncoded dataset using MaxAbsScaler
@@ -124,13 +179,13 @@ df_label_maxAbs = scaler.fit_transform(df_label)
 df_label_maxAbs = pd.DataFrame(df_label_maxAbs, columns=df_label.columns)
 print(df_label_maxAbs.head(10))
 
-"""
+
 # Normalizing the ordinalEncoded dataset using RobustScaler
 scaler = preprocessing.RobustScaler()
 df_ordinal_robust = scaler.fit_transform(df_ordinal)
 df_ordinal_robust = pd.DataFrame(df_ordinal_robust, columns=df_ordinal.columns)
 print(df_ordinal_robust.head(10))
-"""
+
 
 
 # Normalizing the oneHotEncoded dataset using RobustScaler
@@ -148,13 +203,12 @@ df_label_robust = pd.DataFrame(df_label_robust, columns=df_label.columns)
 print(df_label_robust.head(10))
 
 
-"""
+
 # Normalizing the ordinalEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
 df_ordinal_minMax = scaler.fit_transform(df_ordinal)
 df_ordinal_minMax = pd.DataFrame(df_ordinal_minMax, columns=df_ordinal.columns)
 print(df_ordinal_minMax.head(10))
-"""
 
 # Normalizing the oneHotEncoded dataset using MinMaxScaler
 scaler = preprocessing.MinMaxScaler()
@@ -168,13 +222,11 @@ df_label_minMax = scaler.fit_transform(df_label)
 df_label_minMax = pd.DataFrame(df_label_minMax, columns=df_label.columns)
 print(df_label_minMax.head(10))
 
-"""
 # Normalizing the ordinalEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
 df_ordinal_stand = scaler.fit_transform(df_ordinal)
 df_ordinal_stand = pd.DataFrame(df_ordinal_stand, columns=df_ordinal.columns)
 print(df_ordinal_stand.head(10))
-"""
 
 # Normalizing the oneHotEncoded dataset using StandardScaler
 scaler = preprocessing.StandardScaler()
@@ -188,7 +240,7 @@ df_label_stand = scaler.fit_transform(df_label)
 df_label_stand = pd.DataFrame(df_label_stand, columns=df_label.columns)
 print(df_label_stand.head(10))
 
-
+"""
 #show result of MaxAbs scaling EngineHP and credit history
 fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
 ax1.set_title('Before_scaling(EngineHp-credit history)')
@@ -447,19 +499,30 @@ plt.show()
 sns.heatmap(df.corr(method='pearson'))
 plt.title("pearson")
 plt.show()
+"""
 
 
 
 df2 = df_label_stand.copy()
-# Rename 'target' and 'annual_claims' features
-df2.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
+# # Rename 'target' and 'annual_claims' features
+# df2.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
+
 # Drop 'ID' feature
 df2.drop(['ID'], 1, inplace=True)
 
+# Correlation of all features
+plt.figure(figsize=(15,15))
+sns.heatmap(df2.corr(method='pearson'), annot=True, fmt='.2f', linewidths=5, cmap='Blues')
+plt.title("Correlation of all features")
+plt.show()
+
+
 # Split the dataset
-X = df2.drop(['target'], 1)
-y = targets
+X = df2.drop(['annual_claims'], 1)
+y = df2['annual_claims'].astype('int64')
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+
 
 model = BaggingClassifier() #grid search 해야함
 params = {'n_estimators': [100,125,150],
@@ -486,70 +549,70 @@ print("\n---------- KNN algorithm ----------")
 print(y_prec[0:100])
 print("Score: %.2f" % knn.score(X_test, y_test))
 
-
-rfModel = RandomForestClassifier()
-params = {'n_estimators': [100,125,150],
-              'max_depth': [2,4,6,8],
-              'max_features': [0.1,0.4, 0.5,1],
-              'max_samples':[0.1, 0.2, 0.3,0.5,1]
-          };
-print("Do randomforest regressor grid search")
-rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
-rfModel_gscv.fit(X_train,y_train)
-y_predict = rfModel_gscv.predict(X_test)
-print("Best param : ",rfModel_gscv.best_params_)
-print("Best score : ",rfModel_gscv.best_score_)
-print(rfModel_gscv.score(X_test,y_test))
-print("\n\n\n")
-
-# LinearRegression
-line_reg = LinearRegression();
-line_reg.fit(X_train, y_train)
-y_predict = line_reg.predict(X_test)
-
-print("y_predict: \n", y_predict)
-print("Score: %.2f" % line_reg.score(X_test, y_test))
-
-# Polynomial Regression
-poly_reg = PolynomialFeatures(degree=2)
-X_poly_train = poly_reg.fit_transform(X_train)
-X_poly_test = poly_reg.fit_transform(X_test)
-pol_reg = LinearRegression()
-pol_reg.fit(X_poly_train, y_train)
-y_predict = line_reg.predict(X_test)
-
-print("y_predict: \n", y_predict)
-print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
-
-
-
-
-# K-mean clustering
-df3 = df_label.copy()
-# Rename 'target' and 'annual_claims' features
-df3.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
-# Drop 'ID' feature
-df3.drop(['ID'], 1, inplace=True)
-
-# Split the dataset
-X_3 = df3.drop(['target'], 1).astype(float)
-y_3 = df3['target']
-X_train3, X_test3, y_train3, y_test3 = train_test_split(X_3, y_3, random_state=0)
-
-X_train3 = np.array(X_train3)
-X_test3 = np.array(X_test3)
-y_test3 = np.array(y_test3)
-
-kmeans = KMeans(n_clusters=2)
-kmeans.fit(X_train3)
-correct = 0
-for i in range(len(X_test3)):
-    predict_me = np.array(X_test3[i].astype(float))
-    predict_me = predict_me.reshape(-1,len(predict_me))
-    prediction = kmeans.predict(predict_me)
-    if(prediction[0]==y_test3[i]):
-        correct += 1
-print("Score: %.2f" % (correct/len(X_test3)))
+#
+# rfModel = RandomForestRegressor()
+# params = {'n_estimators': [100,125,150],
+#               'max_depth': [2,4,6,8],
+#               'max_features': [0.1,0.4, 0.5,1],
+#               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+#           };
+# print("Do randomforest regressor grid search")
+# rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+# rfModel_gscv.fit(X_train,y_train)
+# y_predict = rfModel_gscv.predict(X_test)
+# print("Best param : ",rfModel_gscv.best_params_)
+# print("Best score : ",rfModel_gscv.best_score_)
+# print(rfModel_gscv.score(X_test,y_test))
+# print("\n\n\n")
+#
+# # LinearRegression
+# line_reg = LinearRegression();
+# line_reg.fit(X_train, y_train)
+# y_predict = line_reg.predict(X_test)
+#
+# print("y_predict: \n", y_predict)
+# print("Score: %.2f" % line_reg.score(X_test, y_test))
+#
+# # Polynomial Regression
+# poly_reg = PolynomialFeatures(degree=2)
+# X_poly_train = poly_reg.fit_transform(X_train)
+# X_poly_test = poly_reg.fit_transform(X_test)
+# pol_reg = LinearRegression()
+# pol_reg.fit(X_poly_train, y_train)
+# y_predict = line_reg.predict(X_test)
+#
+# print("y_predict: \n", y_predict)
+# print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
+#
+#
+#
+#
+# # K-mean clustering
+# df3 = df_label.copy()
+# # Rename 'target' and 'annual_claims' features
+# df3.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
+# # Drop 'ID' feature
+# df3.drop(['ID'], 1, inplace=True)
+#
+# # Split the dataset
+# X_3 = df3.drop(['target'], 1).astype(float)
+# y_3 = df3['target']
+# X_train3, X_test3, y_train3, y_test3 = train_test_split(X_3, y_3, random_state=0)
+#
+# X_train3 = np.array(X_train3)
+# X_test3 = np.array(X_test3)
+# y_test3 = np.array(y_test3)
+#
+# kmeans = KMeans(n_clusters=2)
+# kmeans.fit(X_train3)
+# correct = 0
+# for i in range(len(X_test3)):
+#     predict_me = np.array(X_test3[i].astype(float))
+#     predict_me = predict_me.reshape(-1,len(predict_me))
+#     prediction = kmeans.predict(predict_me)
+#     if(prediction[0]==y_test3[i]):
+#         correct += 1
+# print("Score: %.2f" % (correct/len(X_test3)))
 
 
 
@@ -641,4 +704,4 @@ df_test_model.rename(columns = {'target':'claim_prediction', 'annual_claims':'ta
 df_test_model.drop(['ID'], 1, inplace=True)
 
 print("\n\n============================== Using own module ==============================")
-process_module(df_test_model, 'target')
+# process_module(df_test_model, 'target')
