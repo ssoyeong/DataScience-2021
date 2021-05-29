@@ -23,35 +23,34 @@ pd.set_option('display.max_columns', 100)
 
 # Read csv
 df = pd.read_excel('IT_3.xlsx')
+df.fillna(axis=0, method='ffill', inplace=True)
 
+df1 = pd.DataFrame(df)
 # # Drop 5 columns
-df = df.drop(['Miles_driven_annually', 'Years_Experience', 'EngineHP', 'credit_history'], axis=1)
+df1 = df1.drop(['Miles_driven_annually', 'Years_Experience', 'EngineHP', 'credit_history'], axis=1)
 # Drop rows with Nan
 
 # Fill missing values
-df.fillna(axis=0, method='ffill', inplace=True)
+df1['annual_claims']=df1['annual_claims'].astype(np.int64)
+df1['annual_claims']=df['annual_claims'].astype('category')
 
 
 
 
-# Correlation of all features
-plt.figure(figsize=(15,15))
-sns.heatmap(df.corr(method='pearson'), annot=True, fmt='.2f', linewidths=5, cmap='Blues')
-plt.title("Correlation of all features")
-plt.show()
+
 
 # #make target to category
 # targets = df['annual_claims'].astype(np.int64)
 # targets = targets.astype('category')
 
 
-df_ordinal = df.copy()
-df_oneHot = df.copy()
-df_label = df.copy()
+df_ordinal = df1.copy()
+df_oneHot = df1.copy()
+df_label = df1.copy()
 
 # Convert 'Marital_Status' feature to numeric values using ordinalEncoder
 ordinalEncoder = preprocessing.OrdinalEncoder()
-X = pd.DataFrame(df['Marital_Status'])
+X = pd.DataFrame(df1['Marital_Status'])
 ordinalEncoder.fit(X)
 df_ordinal['Marital_Status'] = pd.DataFrame(ordinalEncoder.transform(X))
 
@@ -63,18 +62,18 @@ df_label['Marital_Status'] = labelEncoder.transform(df_label['Marital_Status'])
 
 # Convert 'Vehical_type' feature to numeric values using ordinalEncoder
 ordEnc = preprocessing.OrdinalEncoder()
-X = pd.DataFrame(df['Vehical_type'])
+X = pd.DataFrame(df1['Vehical_type'])
 ordEnc.fit(X)
 df_ordinal['Vehical_type'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'Vehical_type' feature to numeric values using labelEncoder
 labelEnc = preprocessing.LabelEncoder()
-labelEnc.fit(df['Vehical_type'])
-df_label['Vehical_type'] = pd.DataFrame(labelEnc.transform(df['Vehical_type']))
+labelEnc.fit(df1['Vehical_type'])
+df_label['Vehical_type'] = pd.DataFrame(labelEnc.transform(df1['Vehical_type']))
 
 
 # Convert 'Gender' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['Gender'])
+X = pd.DataFrame(df1['Gender'])
 ordEnc.fit(X)
 df_ordinal['Gender']  = pd.DataFrame(ordEnc.transform(X))
 
@@ -84,73 +83,73 @@ df_label['Gender'] = pd.DataFrame(labelEnc.transform(X))
 
 
 # Convert 'State' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['State'])
+X = pd.DataFrame(df1['State'])
 ordEnc.fit(X)
 df_ordinal['State'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'State' features to numeric values using labelEncoder
-labelEnc.fit(df['State'])
-df_label['State'] = pd.DataFrame(labelEnc.transform(df['State']))
+labelEnc.fit(df1['State'])
+df_label['State'] = pd.DataFrame(labelEnc.transform(df1['State']))
 
 
 # Convert 'Age_bucket' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['Age_bucket'])
+X = pd.DataFrame(df1['Age_bucket'])
 ordEnc.fit(X)
 df_ordinal['Age_bucket'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'Age_bucket' features to numeric values using labelEncoder
-labelEnc.fit(df['Age_bucket'])
-df_label['Age_bucket'] = pd.DataFrame(labelEnc.transform(df['Age_bucket']))
+labelEnc.fit(df1['Age_bucket'])
+df_label['Age_bucket'] = pd.DataFrame(labelEnc.transform(df1['Age_bucket']))
 
 
 # Convert 'EngineHP_bucket' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['EngineHP_bucket'])
+X = pd.DataFrame(df1['EngineHP_bucket'])
 ordEnc.fit(X)
 df_ordinal['EngineHP_bucket'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'EngineHP_bucket' features to numeric values using labelEncoder
-labelEnc.fit(df['EngineHP_bucket'])
-df_label['EngineHP_bucket'] = pd.DataFrame(labelEnc.transform(df['EngineHP_bucket']))
+labelEnc.fit(df1['EngineHP_bucket'])
+df_label['EngineHP_bucket'] = pd.DataFrame(labelEnc.transform(df1['EngineHP_bucket']))
 
 
 # Convert 'Years_Experience_bucket' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['Years_Experience_bucket'])
+X = pd.DataFrame(df1['Years_Experience_bucket'])
 ordEnc.fit(X)
 df_ordinal['Years_Experience_bucket'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'Years_Experience_bucket' features to numeric values using labelEncoder
-labelEnc.fit(df['Years_Experience_bucket'])
-df_label['Years_Experience_bucket'] = pd.DataFrame(labelEnc.transform(df['Years_Experience_bucket']))
+labelEnc.fit(df1['Years_Experience_bucket'])
+df_label['Years_Experience_bucket'] = pd.DataFrame(labelEnc.transform(df1['Years_Experience_bucket']))
 
 
 # Convert 'Miles_driven_annually_bucket' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['Miles_driven_annually_bucket'])
+X = pd.DataFrame(df1['Miles_driven_annually_bucket'])
 ordEnc.fit(X)
 df_ordinal['Miles_driven_annually_bucket'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'Miles_driven_annually_bucket' features to numeric values using labelEncoder
-labelEnc.fit(df['Miles_driven_annually_bucket'])
-df_label['Miles_driven_annually_bucket'] = pd.DataFrame(labelEnc.transform(df['Miles_driven_annually_bucket']))
+labelEnc.fit(df1['Miles_driven_annually_bucket'])
+df_label['Miles_driven_annually_bucket'] = pd.DataFrame(labelEnc.transform(df1['Miles_driven_annually_bucket']))
 
 
 # Convert 'credit_history_bucket' features to numeric values using ordinalEncoder
-X = pd.DataFrame(df['credit_history_bucket'])
+X = pd.DataFrame(df1['credit_history_bucket'])
 ordEnc.fit(X)
 df_ordinal['credit_history_bucket'] = pd.DataFrame(ordEnc.transform(X))
 
 # Convert 'credit_history_bucket' features to numeric values using labelEncoder
-labelEnc.fit(df['credit_history_bucket'])
-df_label['credit_history_bucket'] = pd.DataFrame(labelEnc.transform(df['credit_history_bucket']))
+labelEnc.fit(df1['credit_history_bucket'])
+df_label['credit_history_bucket'] = pd.DataFrame(labelEnc.transform(df1['credit_history_bucket']))
 
 print("=======isNan")
 print(df_label.isnull().sum())
 # 인코딩 거치면 null 값이 생깁니다..
 df_label = df_label.dropna()
 
-df['annual_claims']=df['annual_claims'].astype(np.int64)
+df_oneHot['annual_claims']=df_oneHot['annual_claims'].astype(np.int64)
 
 # Getting all the categorical variables in a list
-categoricalColumn = df.columns[df.dtypes == np.object].tolist()
+categoricalColumn = df1.columns[df1.dtypes == np.object].tolist()
 # Convert categorical features to numeric values using oneHotEncoder
 for col in categoricalColumn:
     if(len(df_oneHot[col].unique()) == 2):
@@ -158,8 +157,8 @@ for col in categoricalColumn:
 
 df_oneHot = pd.get_dummies(df_oneHot)
 
-df['annual_claims']=df['annual_claims'].astype('category')
-y = df['annual_claims']
+df1['annual_claims']=df1['annual_claims'].astype('category')
+y = df1['annual_claims']
 
 # Split the dataset
 
@@ -295,50 +294,8 @@ df_label_stand_test = scaler.fit_transform(X2_test)
 df_label_stand_test = pd.DataFrame(df_label_stand_test, columns=X2_test.columns)
 print(df_label_stand_test.head(10))
 
-"""
-#show result of MaxAbs scaling EngineHP and credit history
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(EngineHp-credit history)')
-sns.kdeplot(df_label['EngineHP'],ax=ax1)
-sns.kdeplot(df_label['credit_history'],ax=ax1)
 
-ax2.set_title('After_scaling(EngineHp-credit history)')
-sns.kdeplot(df_label_minMax['EngineHP'],ax=ax2)
-sns.kdeplot(df_label_minMax['credit_history'],ax=ax2)
-plt.show()
 
-#show result of MaxAbs scaling Years_Experience and annual_claims
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_label['Years_Experience'],ax=ax1)
-sns.kdeplot(df_label['annual_claims'],ax=ax1)
-
-ax2.set_title('After_scaling(Years_Experience-annual_claims)')
-sns.kdeplot(df_label_minMax['Years_Experience'],ax=ax2)
-sns.kdeplot(df_label_minMax['annual_claims'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling Gender and Marital Status
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_label['Gender'],ax=ax1)
-sns.kdeplot(df_label['Marital_Status'],ax=ax1)
-
-ax2.set_title('After_scaling(Gender-Marital_Status)')
-sns.kdeplot(df_label_minMax['Gender'],ax=ax2)
-sns.kdeplot(df_label_minMax['Marital_Status'],ax=ax2)
-plt.show()
-
-#show result of MaxAbs scaling size_of_family and Miles_driven_annually
-fig,(ax1,ax2) = plt.subplots(ncols=2,figsize=(6,5))
-ax1.set_title('Before_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_label['size_of_family'],ax=ax1)
-sns.kdeplot(df_label['Miles_driven_annually'],ax=ax1)
-
-ax2.set_title('After_scaling(size_of_family-Miles_driven_annually)')
-sns.kdeplot(df_label_minMax['size_of_family'],ax=ax2)
-sns.kdeplot(df_label_minMax['Miles_driven_annually'],ax=ax2)
-plt.show()
 
 #bar graph of target
 sns.countplot(df['target'])
@@ -532,7 +489,7 @@ plt.ylabel('Annual claims ')
 plt.title('Scatter plot divided by Gender')
 plt.show()
 
-
+df['annual_claims']=df1['annual_claims'].astype(np.int64)
 #Boxplot of annual claims divided by gender
 sns.boxplot(df['Gender'],df['annual_claims'])
 plt.show()
@@ -554,7 +511,12 @@ plt.show()
 sns.heatmap(df.corr(method='pearson'))
 plt.title("pearson")
 plt.show()
-"""
+
+# Correlation of all features
+plt.figure(figsize=(15,15))
+sns.heatmap(df.corr(method='pearson'), annot=True, fmt='.2f', linewidths=5, cmap='Blues')
+plt.title("Correlation of all features")
+plt.show()
 
 
 
@@ -568,6 +530,23 @@ X_train = df_label_stand_train
 X_test = df_label_stand_test
 y_train = y2_train
 y_test = y2_test
+
+print(X_test)
+print(X_train)
+#
+
+#kmeans cluster
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(X_train)
+correct = 0
+for i in range(len(X_test)):
+    predict_me = np.array(X_test[i].astype(float))
+    predict_me = predict_me.reshape(-1,len(predict_me))
+    prediction = kmeans.predict(predict_me)
+    if(prediction[0]==y_test[i]):
+        correct += 1
+print("Score: %.2f" % (correct/len(X_test)))
+
 """
 model = BaggingClassifier() #grid search 해야함
 params = {'n_estimators': [100,125,150],
@@ -610,10 +589,10 @@ print("Best score : ",rfModel_gscv.best_score_)
 print(rfModel_gscv.score(X_test,y_test))
 print("\n\n\n")
 
-
+"""
 y_test = y_test.astype(np.int64)
 y_train = y_train.astype(np.int)
-
+"""
 models = BaggingRegressor()
 params = {'n_estimators': [100,125,150],
               'max_features': [0.1,0.4, 0.5,1],
@@ -621,7 +600,7 @@ params = {'n_estimators': [100,125,150],
           };
 
 print("\n---------- Bagging regressor grid search ----------")
-models_gscv = GridSearchCV(models,param_grid = params,cv=5,scoring='accuracy')
+models_gscv = GridSearchCV(models,param_grid = params,cv=5,scoring='r2')
 models_gscv.fit(X_train,y_train)
 print("Best param : ",models_gscv.best_params_)
 print("Best score : ",models_gscv.best_score_)
@@ -654,7 +633,7 @@ print("\n\n\n")
 line_reg = LinearRegression();
 line_reg.fit(X_train, y_train)
 y_predict = line_reg.predict(X_test)
-print("\n---------- KNN LinearRegression ----------")
+print("\n---------- LinearRegression ----------")
 print("y_predict: \n", y_predict)
 print("Score: %.2f" % line_reg.score(X_test, y_test))
 #
@@ -668,23 +647,6 @@ y_predict = line_reg.predict(X_test)
 print("\n---------- Polynomial algorithm ----------")
 print("y_predict: \n", y_predict)
 print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
-
-
-
-#
-
-#
-kmeans = KMeans(n_clusters=2)
-kmeans.fit(X_train)
-correct = 0
-for i in range(len(X_test)):
-     predict_me = np.array(X_test[i].astype(float))
-     predict_me = predict_me.reshape(-1,len(predict_me))
-     prediction = kmeans.predict(predict_me)
-     if(prediction[0]==y_test[i]):
-         correct += 1
-print("Score: %.2f" % (correct/len(X_test)))
-
 
 
 
