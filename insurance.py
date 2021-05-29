@@ -645,17 +645,21 @@ y = y2
 
 X_train,X_test,y_train,y_test = train_test_split(X, y, random_state=0)
 
+X_train2 = np.array(X_train)
+X_test2 = np.array(X_test)
+y_test2 = np.array(y_test)
+
 #kmeans cluster
 kmeans = KMeans(n_clusters=2)
-kmeans.fit(X_train)
+kmeans.fit(X_train2)
 correct = 0
-for i in range(len(X_test)):
-    predict_me = np.array(X_test[i].astype(float))
+for i in range(len(X_test2)):
+    predict_me = np.array(X_test2[i].astype(float))
     predict_me = predict_me.reshape(-1,len(predict_me))
     prediction = kmeans.predict(predict_me)
-    if(prediction[0]==y_test[i]):
+    if(prediction[0]==y_test2[i]):
         correct += 1
-print("Score: %.2f" % (correct/len(X_test)))
+print("Score: %.2f" % (correct/len(X_test2)))
 
 
 #Make own module to predict
