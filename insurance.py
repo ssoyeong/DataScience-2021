@@ -159,7 +159,7 @@ df_oneHot = pd.get_dummies(df_oneHot)
 
 df1['annual_claims']=df1['annual_claims'].astype('category')
 y = df1['annual_claims']
-
+y2 = df1['annual_claims']
 # Split the dataset
 
 X1 = df_ordinal.drop(['annual_claims'], 1)
@@ -535,17 +535,7 @@ print(X_test)
 print(X_train)
 #
 
-#kmeans cluster
-kmeans = KMeans(n_clusters=2)
-kmeans.fit(X_train)
-correct = 0
-for i in range(len(X_test)):
-    predict_me = np.array(X_test[i].astype(float))
-    predict_me = predict_me.reshape(-1,len(predict_me))
-    prediction = kmeans.predict(predict_me)
-    if(prediction[0]==y_test[i]):
-        correct += 1
-print("Score: %.2f" % (correct/len(X_test)))
+
 
 """
 model = BaggingClassifier() #grid search 해야함
@@ -650,7 +640,22 @@ print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
 
 
 
+X = X2
+y = y2
 
+X_train,X_test,y_train,y_test = train_test_split(X, y, random_state=0)
+
+#kmeans cluster
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(X_train)
+correct = 0
+for i in range(len(X_test)):
+    predict_me = np.array(X_test[i].astype(float))
+    predict_me = predict_me.reshape(-1,len(predict_me))
+    prediction = kmeans.predict(predict_me)
+    if(prediction[0]==y_test[i]):
+        correct += 1
+print("Score: %.2f" % (correct/len(X_test)))
 
 
 #Make own module to predict
