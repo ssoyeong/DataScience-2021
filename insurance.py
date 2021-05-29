@@ -689,44 +689,62 @@ print("Score: %.2f" % (correct/len(X_test)))
 
 
 
+
+
 #Make own module to predict
 def process_module(df, targetName):
-   maxAbsScaler = preprocessing.MaxAbsScaler()
-   minmaxScaler = preprocessing.MinMaxScaler()
-   robustScaler = preprocessing.RobustScaler()
-   standardScaler = preprocessing.StandardScaler()
-   
-   df_maxAbs_scaled = maxAbsScaler.fit_transform(df)
-   df_maxAbs_scaled = pd.DataFrame(df_maxAbs_scaled, columns=df.columns)
-   
-   df_minMax_scaled = minmaxScaler.fit_transform(df)
-   df_minMax_scaled = pd.DataFrame(df_minMax_scaled, columns=df.columns)
-   
-   df_robust_scaled = robustScaler.fit_transform(df)
-   df_robust_scaled = pd.DataFrame(df_robust_scaled, columns=df.columns)
-   
-   df_standard_scaled = standardScaler.fit_transform(df)
-   df_standard_scaled = pd.DataFrame(df_standard_scaled, columns=df.columns)
 
-   print("\n------------------------- Using maxAbs scaled dataset -------------------------")
-   max_score_maxAbs = algorithm_model(df_maxAbs_scaled, targetName)
-   print("\n------------------------- Using minMax scaled dataset -------------------------")
-   max_score_minMax = algorithm_model(df_minMax_scaled, targetName)
-   print("\n------------------------- Using robust scaled dataset -------------------------")
-   max_score_robust = algorithm_model(df_robust_scaled, targetName)
-   print("\n------------------------- Using standard scaled dataset -------------------------")
-   max_score_standard = algorithm_model(df_standard_scaled, targetName)
-
-   max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
-   print("\n\n============================== Result ==============================")
-   print("Final maximum score: %.6f" % max_score_result)
-
-
-def algorithm_model(df, targetName):
     # Split the dataset
-    X = df.drop([targetName], 1)
     y = df[targetName]
+    X = df.drop([targetName], 1)
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+
+    # Normalization with 4 Scaling methods
+    maxAbsScaler = preprocessing.MaxAbsScaler()
+    minmaxScaler = preprocessing.MinMaxScaler()
+    robustScaler = preprocessing.RobustScaler()
+    standardScaler = preprocessing.StandardScaler()
+
+    df_maxAbs_scaled_train = maxAbsScaler.fit_transform(X_train)
+    df_maxAbs_scaled_train = pd.DataFrame(df_maxAbs_scaled_train, columns=X_train.columns)
+    df_maxAbs_scaled_test = maxAbsScaler.fit_transform(X_test)
+    df_maxAbs_scaled_test = pd.DataFrame(df_maxAbs_scaled_test, columns=X_test.columns)
+
+    df_minMax_scaled_train = minmaxScaler.fit_transform(X_train)
+    df_minMax_scaled_train = pd.DataFrame(df_minMax_scaled_train, columns=X_train.columns)
+    df_minMax_scaled_test = minmaxScaler.fit_transform(X_test)
+    df_minMax_scaled_test = pd.DataFrame(df_minMax_scaled_test, columns=X_test.columns)
+
+    df_robust_scaled_train = robustScaler.fit_transform(X_train)
+    df_robust_scaled_train = pd.DataFrame(df_robust_scaled_train, columns=X_train.columns)
+    df_robust_scaled_test = robustScaler.fit_transform(X_test)
+    df_robust_scaled_test = pd.DataFrame(df_robust_scaled_test, columns=X_test.columns)
+
+    df_standard_scaled_train = standardScaler.fit_transform(X_train)
+    df_standard_scaled_train = pd.DataFrame(df_standard_scaled_train, columns=X_train.columns)
+    df_standard_scaled_test = standardScaler.fit_transform(X_test)
+    df_standard_scaled_test = pd.DataFrame(df_standard_scaled_test, columns=X_test.columns)
+
+
+    # Alogirthm
+    print("\n------------------------- Using maxAbs scaled dataset -------------------------")
+    max_score_maxAbs = algorithm_module(df_maxAbs_scaled_train, df_maxAbs_scaled_test, y_train, y_test)
+    print("\n------------------------- Using minMax scaled dataset -------------------------")
+    max_score_minMax = algorithm_module(df_minMax_scaled_train, df_minMax_scaled_test, y_train, y_test)
+    print("\n------------------------- Using robust scaled dataset -------------------------")
+    max_score_robust = algorithm_module(df_robust_scaled_train, df_robust_scaled_test, y_train, y_test)
+    print("\n------------------------- Using standard scaled dataset -------------------------")
+    max_score_standard = algorithm_module(df_standard_scaled_train, df_standard_scaled_test, y_train, y_test)
+
+
+    # Result
+    max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
+    print("\n\n============================== Result ==============================")
+    print("Final maximum score: %.6f" % max_score_result)
+
+
+def algorithm_module(X_train, X_test, y_train, y_test):
 
     # Linear Regression
     line_reg = LinearRegression()
@@ -769,10 +787,6 @@ def algorithm_model(df, targetName):
 
 # Test our model using the ordinal encoded dataset
 df_test_model = df_ordinal.copy()
-# Rename 'target' and 'annual_claims' features
-df_test_model.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
-# Drop 'ID' feature
-df_test_model.drop(['ID'], 1, inplace=True)
-
 print("\n\n============================== Using own module ==============================")
+process_module(df_test_model, 'annual_claims')
 # process_module(df_test_model, 'target')
