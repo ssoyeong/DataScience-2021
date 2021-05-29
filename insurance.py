@@ -564,123 +564,123 @@ X_test = df_label_stand_test
 y_train = y2_train
 y_test = y2_test
 
-model = BaggingClassifier() #grid search 해야함
-params = {'n_estimators': [100,125,150],
-              'max_features': [0.1,0.4, 0.5,1],
-              'max_samples':[0.1, 0.2, 0.3,0.5,1]
-          };
-
-print("\n---------- Bagging classifier grid search ----------")
-model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
-model_gscv.fit(X_train,y_train)
-print("Best param : ",model_gscv.best_params_)
-print("Best score : ",model_gscv.best_score_)
-prediction = model_gscv.predict(X_test)
-print(model_gscv.score(X_test,y_test))
-
-
-# Using KNN algorithm
-# Create and train a KNN classifier
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(X_train, y_train)
-
-y_prec = knn.predict(X_test)
-print("\n---------- KNN classifier  ----------")
-print(y_prec[0:100])
-print("Score: %.2f" % knn.score(X_test, y_test))
-
-
-rfModel = RandomForestClassifier()
-params = {'n_estimators': [100,125,150],
-             'max_depth': [2,4,6,8],
-               'max_features': [0.1,0.4, 0.5,1],
-               'max_samples':[0.1, 0.2, 0.3,0.5,1]
-          };
-print("\n----------Random Forest classifier grid search ----------")
-rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
-rfModel_gscv.fit(X_train,y_train)
-y_predict = rfModel_gscv.predict(X_test)
-print("Best param : ",rfModel_gscv.best_params_)
-print("Best score : ",rfModel_gscv.best_score_)
-print(rfModel_gscv.score(X_test,y_test))
-print("\n\n\n")
-
-
-model = BaggingRegressor() #grid search 해야함
-params = {'n_estimators': [100,125,150],
-              'max_features': [0.1,0.4, 0.5,1],
-              'max_samples':[0.1, 0.2, 0.3,0.5,1]
-          };
-
-print("Do bagging regressor grid search")
-model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
-model_gscv.fit(X_train,y_train)
-print("Best param : ",model_gscv.best_params_)
-print("Best score : ",model_gscv.best_score_)
-prediction = model_gscv.predict(X_test)
-print(model_gscv.score(X_test,y_test))
-
-
-# Using KNN algorithm
-# Create and train a KNN classifier
-knn = KNeighborsRegressor(n_neighbors=5)
-knn.fit(X_train, y_train)
-
-y_prec = knn.predict(X_test)
-print("\n---------- KNN algorithm ----------")
-print(y_prec[0:100])
-print("Score: %.2f" % knn.score(X_test, y_test))
-
-
-rfModel = RandomForestRegressor()
-params = {'n_estimators': [100,125,150],
-             'max_depth': [2,4,6,8],
-               'max_features': [0.1,0.4, 0.5,1],
-               'max_samples':[0.1, 0.2, 0.3,0.5,1]
-          };
-print("\n----------Random Forest grid search ----------")
-rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
-rfModel_gscv.fit(X_train,y_train)
-y_predict = rfModel_gscv.predict(X_test)
-print("Best param : ",rfModel_gscv.best_params_)
-print("Best score : ",rfModel_gscv.best_score_)
-print(rfModel_gscv.score(X_test,y_test))
-print("\n\n\n")
-
-# # LinearRegression
-line_reg = LinearRegression();
-line_reg.fit(X_train, y_train)
-y_predict = line_reg.predict(X_test)
-print("\n---------- KNN LinearRegression ----------")
-print("y_predict: \n", y_predict)
-print("Score: %.2f" % line_reg.score(X_test, y_test))
+# model = BaggingClassifier() #grid search 해야함
+# params = {'n_estimators': [100,125,150],
+#               'max_features': [0.1,0.4, 0.5,1],
+#               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+#           };
 #
-# # Polynomial Regression
-poly_reg = PolynomialFeatures(degree=2)
-X_poly_train = poly_reg.fit_transform(X_train)
-X_poly_test = poly_reg.fit_transform(X_test)
-pol_reg = LinearRegression()
-pol_reg.fit(X_poly_train, y_train)
-y_predict = line_reg.predict(X_test)
-print("\n---------- Polynomial algorithm ----------")
-print("y_predict: \n", y_predict)
-print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
-
-
-
+# print("\n---------- Bagging classifier grid search ----------")
+# model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
+# model_gscv.fit(X_train,y_train)
+# print("Best param : ",model_gscv.best_params_)
+# print("Best score : ",model_gscv.best_score_)
+# prediction = model_gscv.predict(X_test)
+# print(model_gscv.score(X_test,y_test))
 #
-
 #
-kmeans = KMeans(n_clusters=2)
-kmeans.fit(X_train)
-correct = 0
-for i in range(len(X_test)):
-     predict_me = np.array(X_test[i].astype(float))
-     predict_me = predict_me.reshape(-1,len(predict_me))
-     prediction = kmeans.predict(predict_me)
-     if(prediction[0]==y_test[i]):
-         correct += 1
-print("Score: %.2f" % (correct/len(X_test)))
+# # Using KNN algorithm
+# # Create and train a KNN classifier
+# knn = KNeighborsClassifier(n_neighbors=5)
+# knn.fit(X_train, y_train)
+#
+# y_prec = knn.predict(X_test)
+# print("\n---------- KNN classifier  ----------")
+# print(y_prec[0:100])
+# print("Score: %.2f" % knn.score(X_test, y_test))
+#
+#
+# rfModel = RandomForestClassifier()
+# params = {'n_estimators': [100,125,150],
+#              'max_depth': [2,4,6,8],
+#                'max_features': [0.1,0.4, 0.5,1],
+#                'max_samples':[0.1, 0.2, 0.3,0.5,1]
+#           };
+# print("\n----------Random Forest classifier grid search ----------")
+# rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+# rfModel_gscv.fit(X_train,y_train)
+# y_predict = rfModel_gscv.predict(X_test)
+# print("Best param : ",rfModel_gscv.best_params_)
+# print("Best score : ",rfModel_gscv.best_score_)
+# print(rfModel_gscv.score(X_test,y_test))
+# print("\n\n\n")
+#
+#
+# model = BaggingRegressor() #grid search 해야함
+# params = {'n_estimators': [100,125,150],
+#               'max_features': [0.1,0.4, 0.5,1],
+#               'max_samples':[0.1, 0.2, 0.3,0.5,1]
+#           };
+#
+# print("Do bagging regressor grid search")
+# model_gscv = GridSearchCV(model,param_grid = params,cv=5,scoring='accuracy')
+# model_gscv.fit(X_train,y_train)
+# print("Best param : ",model_gscv.best_params_)
+# print("Best score : ",model_gscv.best_score_)
+# prediction = model_gscv.predict(X_test)
+# print(model_gscv.score(X_test,y_test))
+#
+#
+# # Using KNN algorithm
+# # Create and train a KNN classifier
+# knn = KNeighborsRegressor(n_neighbors=5)
+# knn.fit(X_train, y_train)
+#
+# y_prec = knn.predict(X_test)
+# print("\n---------- KNN algorithm ----------")
+# print(y_prec[0:100])
+# print("Score: %.2f" % knn.score(X_test, y_test))
+#
+#
+# rfModel = RandomForestRegressor()
+# params = {'n_estimators': [100,125,150],
+#              'max_depth': [2,4,6,8],
+#                'max_features': [0.1,0.4, 0.5,1],
+#                'max_samples':[0.1, 0.2, 0.3,0.5,1]
+#           };
+# print("\n----------Random Forest grid search ----------")
+# rfModel_gscv = GridSearchCV(rfModel,params,scoring = 'r2')
+# rfModel_gscv.fit(X_train,y_train)
+# y_predict = rfModel_gscv.predict(X_test)
+# print("Best param : ",rfModel_gscv.best_params_)
+# print("Best score : ",rfModel_gscv.best_score_)
+# print(rfModel_gscv.score(X_test,y_test))
+# print("\n\n\n")
+#
+# # # LinearRegression
+# line_reg = LinearRegression();
+# line_reg.fit(X_train, y_train)
+# y_predict = line_reg.predict(X_test)
+# print("\n---------- KNN LinearRegression ----------")
+# print("y_predict: \n", y_predict)
+# print("Score: %.2f" % line_reg.score(X_test, y_test))
+# #
+# # # Polynomial Regression
+# poly_reg = PolynomialFeatures(degree=2)
+# X_poly_train = poly_reg.fit_transform(X_train)
+# X_poly_test = poly_reg.fit_transform(X_test)
+# pol_reg = LinearRegression()
+# pol_reg.fit(X_poly_train, y_train)
+# y_predict = line_reg.predict(X_test)
+# print("\n---------- Polynomial algorithm ----------")
+# print("y_predict: \n", y_predict)
+# print("Score: %.2f" % pol_reg.score(X_poly_test, y_test))
+#
+#
+#
+# #
+#
+# #
+# kmeans = KMeans(n_clusters=2)
+# kmeans.fit(X_train)
+# correct = 0
+# for i in range(len(X_test)):
+#      predict_me = np.array(X_test[i].astype(float))
+#      predict_me = predict_me.reshape(-1,len(predict_me))
+#      prediction = kmeans.predict(predict_me)
+#      if(prediction[0]==y_test[i]):
+#          correct += 1
+# print("Score: %.2f" % (correct/len(X_test)))
 
 
 
@@ -688,42 +688,58 @@ print("Score: %.2f" % (correct/len(X_test)))
 
 #Make own module to predict
 def process_module(df, targetName):
-   maxAbsScaler = preprocessing.MaxAbsScaler()
-   minmaxScaler = preprocessing.MinMaxScaler()
-   robustScaler = preprocessing.RobustScaler()
-   standardScaler = preprocessing.StandardScaler()
-   
-   df_maxAbs_scaled = maxAbsScaler.fit_transform(df)
-   df_maxAbs_scaled = pd.DataFrame(df_maxAbs_scaled, columns=df.columns)
-   
-   df_minMax_scaled = minmaxScaler.fit_transform(df)
-   df_minMax_scaled = pd.DataFrame(df_minMax_scaled, columns=df.columns)
-   
-   df_robust_scaled = robustScaler.fit_transform(df)
-   df_robust_scaled = pd.DataFrame(df_robust_scaled, columns=df.columns)
-   
-   df_standard_scaled = standardScaler.fit_transform(df)
-   df_standard_scaled = pd.DataFrame(df_standard_scaled, columns=df.columns)
 
-   print("\n------------------------- Using maxAbs scaled dataset -------------------------")
-   max_score_maxAbs = algorithm_model(df_maxAbs_scaled, targetName)
-   print("\n------------------------- Using minMax scaled dataset -------------------------")
-   max_score_minMax = algorithm_model(df_minMax_scaled, targetName)
-   print("\n------------------------- Using robust scaled dataset -------------------------")
-   max_score_robust = algorithm_model(df_robust_scaled, targetName)
-   print("\n------------------------- Using standard scaled dataset -------------------------")
-   max_score_standard = algorithm_model(df_standard_scaled, targetName)
-
-   max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
-   print("\n\n============================== Result ==============================")
-   print("Final maximum score: %.6f" % max_score_result)
-
-
-def algorithm_model(df, targetName):
     # Split the dataset
-    X = df.drop([targetName], 1)
     y = df[targetName]
+    X = df.drop([targetName], 1)
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+
+    # Normalization with 4 Scaling methods
+    maxAbsScaler = preprocessing.MaxAbsScaler()
+    minmaxScaler = preprocessing.MinMaxScaler()
+    robustScaler = preprocessing.RobustScaler()
+    standardScaler = preprocessing.StandardScaler()
+
+    df_maxAbs_scaled_train = maxAbsScaler.fit_transform(X_train)
+    df_maxAbs_scaled_train = pd.DataFrame(df_maxAbs_scaled_train, columns=X_train.columns)
+    df_maxAbs_scaled_test = maxAbsScaler.fit_transform(X_test)
+    df_maxAbs_scaled_test = pd.DataFrame(df_maxAbs_scaled_test, columns=X_test.columns)
+
+    df_minMax_scaled_train = minmaxScaler.fit_transform(X_train)
+    df_minMax_scaled_train = pd.DataFrame(df_minMax_scaled_train, columns=X_train.columns)
+    df_minMax_scaled_test = minmaxScaler.fit_transform(X_test)
+    df_minMax_scaled_test = pd.DataFrame(df_minMax_scaled_test, columns=X_test.columns)
+
+    df_robust_scaled_train = robustScaler.fit_transform(X_train)
+    df_robust_scaled_train = pd.DataFrame(df_robust_scaled_train, columns=X_train.columns)
+    df_robust_scaled_test = robustScaler.fit_transform(X_test)
+    df_robust_scaled_test = pd.DataFrame(df_robust_scaled_test, columns=X_test.columns)
+
+    df_standard_scaled_train = standardScaler.fit_transform(X_train)
+    df_standard_scaled_train = pd.DataFrame(df_standard_scaled_train, columns=X_train.columns)
+    df_standard_scaled_test = standardScaler.fit_transform(X_test)
+    df_standard_scaled_test = pd.DataFrame(df_standard_scaled_test, columns=X_test.columns)
+
+
+    # Alogirthm
+    print("\n------------------------- Using maxAbs scaled dataset -------------------------")
+    max_score_maxAbs = algorithm_module(df_maxAbs_scaled_train, df_maxAbs_scaled_test, y_train, y_test)
+    print("\n------------------------- Using minMax scaled dataset -------------------------")
+    max_score_minMax = algorithm_module(df_minMax_scaled_train, df_minMax_scaled_test, y_train, y_test)
+    print("\n------------------------- Using robust scaled dataset -------------------------")
+    max_score_robust = algorithm_module(df_robust_scaled_train, df_robust_scaled_test, y_train, y_test)
+    print("\n------------------------- Using standard scaled dataset -------------------------")
+    max_score_standard = algorithm_module(df_standard_scaled_train, df_standard_scaled_test, y_train, y_test)
+
+
+    # Result
+    max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
+    print("\n\n============================== Result ==============================")
+    print("Final maximum score: %.6f" % max_score_result)
+
+
+def algorithm_module(X_train, X_test, y_train, y_test):
 
     # Linear Regression
     line_reg = LinearRegression()
@@ -766,10 +782,5 @@ def algorithm_model(df, targetName):
 
 # Test our model using the ordinal encoded dataset
 df_test_model = df_ordinal.copy()
-# Rename 'target' and 'annual_claims' features
-df_test_model.rename(columns = {'target':'claim_prediction', 'annual_claims':'target'}, inplace=True)
-# Drop 'ID' feature
-df_test_model.drop(['ID'], 1, inplace=True)
-
 print("\n\n============================== Using own module ==============================")
-# process_module(df_test_model, 'target')
+process_module(df_test_model, 'annual_claims')
