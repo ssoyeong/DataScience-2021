@@ -1,22 +1,82 @@
-import warnings
-warnings.filterwarnings("ignore")
+import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn import linear_model
 from sklearn import preprocessing
-from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.datasets import fetch_openml
+import seaborn as sn
+from sklearn.preprocessing import StandardScaler
+
+from scipy.stats import norm, skew #Import Norm and skew for some statistics
+from scipy import stats #Import stats
+import statsmodels.api as sm #for decomposing the trends, seasonality etc.
+
+from statsmodels.tsa.statespace.sarimax import SARIMAX #for the Seasonal Forecast
 
 
+#Lets check the ditribution of the target variable (Order_Demand)
+from matplotlib import rcParams
 
-def process_module(df, targetName):
+df=pd.read_csv('Historical Product Demand.csv')
+print(df.dtypes)
+df.dropna(axis=0, inplace=True)
+df.reset_index(drop=True)
 
-    # Split the dataset
-    y = df[targetName]
-    X = df.drop([targetName], 1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+def ordinalEncode_category(df,str):
+    ordinalEncoder = preprocessing.OrdinalEncoder()
+    X = pd.DataFrame(df[str])
+    ordinalEncoder.fit(X)
+    df[str] = pd.DataFrame(ordinalEncoder.transform(X))
 
+def labelEncode_category(df,str):
+    labelEncoder = preprocessing.LabelEncoder()
+    labelEncoder.fit(df[str])
+    df[str] = labelEncoder.transform(df[str])
+
+def oneHotEncode_category(df,str):
+    enc = preprocessing.OneHotEncoder()
+    encodedData = enc.fit_transform(df[[str]])
+    encodedDataRecovery = np.argmax(encodedData, axis=1).reshape(-1, 1)
+    df[str] = encodedDataRecovery
+
+
+df_ordinal = df.copy()
+df_oneHot = df.copy()
+df_label = df.copy()
+
+labelEncode_category(df_label,"Product_Code")
+labelEncode_category(df_label,"Warehouse")
+labelEncode_category(df_label,"Product_Category")
+labelEncode_category(df_label,"Date")
+
+
+oneHotEncode_category(df_oneHot,"Product_Code")
+oneHotEncode_category(df_oneHot,"Warehouse")
+oneHotEncode_category(df_oneHot,"Product_Category")
+oneHotEncode_category(df_oneHot,"Date")
+
+
+ordinalEncode_category(df_ordinal,"Product_Code")
+ordinalEncode_category(df_ordinal,"Warehouse")
+ordinalEncode_category(df_ordinal,"Product_Category")
+ordinalEncode_category(df_ordinal,"Date")
+
+
+print(df_ordinal.head(5))
+print(df_oneHot.head(5))
+print(df_label.head(5))
+
+#Since the "()" has been removed , Now i Will change the data type.
+df['Order_Demand']=df['Order_Demand'].str.replace('(',"", regex=True)
+df['Order_Demand']=df['Order_Demand'].str.replace(')',"", regex=True)
+df['Order_Demand'] = df['Order_Demand'].astype('int64')
+
+
+def scale_module(df, targetName):
+    y=df[targetName]
+    X=df.drop([targetName],1)
+    X_train, X_test,y_train,y_test = train_test_split(X,y,random_state=0)
 
     # Normalization with 4 Scaling methods
     maxAbsScaler = preprocessing.MaxAbsScaler()
@@ -45,59 +105,7 @@ def process_module(df, targetName):
     df_standard_scaled_test = pd.DataFrame(df_standard_scaled_test, columns=X_test.columns)
 
 
-    # Alogirthm
-    print("\n------------------------- Using maxAbs scaled dataset -------------------------")
-    max_score_maxAbs = algorithm_module(df_maxAbs_scaled_train, df_maxAbs_scaled_test, y_train, y_test)
-    print("\n------------------------- Using minMax scaled dataset -------------------------")
-    max_score_minMax = algorithm_module(df_minMax_scaled_train, df_minMax_scaled_test, y_train, y_test)
-    print("\n------------------------- Using robust scaled dataset -------------------------")
-    max_score_robust = algorithm_module(df_robust_scaled_train, df_robust_scaled_test, y_train, y_test)
-    print("\n------------------------- Using standard scaled dataset -------------------------")
-    max_score_standard = algorithm_module(df_standard_scaled_train, df_standard_scaled_test, y_train, y_test)
-
-
-    # Result
-    max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
-    print("\n\n============================== Result ==============================")
-    print("Final maximum score: %.6f" % max_score_result)
-
-
-def algorithm_module(X_train, X_test, y_train, y_test):
-
-    # Linear Regression
-    line_reg = LinearRegression()
-    line_reg.fit(X_train, y_train)
-    y_prec_linear = line_reg.predict(X_test)
-    score_linear = line_reg.score(X_test, y_test)
-    print("\ny_predict_linear: \n", y_prec_linear[0:50])
-    print("Score: %.6f" % score_linear)
-
-    # Polynomial Regression
-    poly_reg = PolynomialFeatures(degree=2)
-    X_poly_train = poly_reg.fit_transform(X_train)
-    X_poly_test = poly_reg.fit_transform(X_test)
-    pol_reg = LinearRegression()
-    pol_reg.fit(X_poly_train, y_train)
-    y_prec_poly = line_reg.predict(X_test)
-    score_poly = pol_reg.score(X_poly_test, y_test)
-    print("\ny_predict_poly: \n", y_prec_poly[0:50])
-    print("Score: %.6f" % score_poly)
-
-    # KNN algorithm
-    knn = KNeighborsRegressor(n_neighbors=5)
-    knn.fit(X_train, y_train)
-    y_prec_knn = knn.predict(X_test)
-    score_knn = knn.score(X_test, y_test)
-    print("\ny_predict_KNN: \n", y_prec_knn[0:50])
-    print("Score: %.6f" % score_knn)
-
-    # Random Forest
-    random_forest = RandomForestRegressor(max_depth=4, random_state=0)
-    random_forest.fit(X_train, y_train)
-    y_predict_rf = random_forest.predict(X_test)
-    score_rf = random_forest.score(X_test, y_test)
-    print("\ny_predict_RF: \n", y_predict_rf[0:50])
-    print("Score: %.6f" % score_rf)
-
-    max_score = max(score_linear, score_poly, score_knn, score_rf)
-    return max_score
+    
+scale_module(df_ordinal, 'Order_Demand')
+scale_module(df_oneHot,'Order_Demand')
+scale_module(df_label,'Order_Demand')
